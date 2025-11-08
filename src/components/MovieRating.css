@@ -1,0 +1,160 @@
+.movie-rating {
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.rating-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.avg-rating {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.rating-number {
+  font-size: 48px;
+  font-weight: bold;
+  color: #e50914;
+}
+
+.stars {
+  display: flex;
+  gap: 5px;
+}
+
+.stars span {
+  font-size: 20px;
+  opacity: 0.3;
+}
+
+.stars span.filled {
+  opacity: 1;
+}
+
+.rating-count {
+  color: #b3b3b3;
+  font-size: 14px;
+}
+
+.btn-rate {
+  background: #e50914;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-rate:hover {
+  background: #f40612;
+}
+
+.rating-form {
+  background: #2a2a2a;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.rating-form h4 {
+  margin-bottom: 15px;
+}
+
+.star-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.star-input span {
+  font-size: 32px;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: all 0.2s;
+}
+
+.star-input span.filled {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.rating-form textarea {
+  width: 100%;
+  padding: 12px;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  color: #fff;
+  min-height: 80px;
+  margin-bottom: 15px;
+  resize: vertical;
+}
+
+.rating-form textarea:focus {
+  outline: none;
+  border-color: #e50914;
+}
+
+.btn-submit {
+  background: #e50914;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-submit:hover {
+  background: #f40612;
+}
+
+.user-rating {
+  background: #2a2a2a;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.user-review {
+  font-style: italic;
+  color: #b3b3b3;
+  margin-top: 10px;
+}
+
+.reviews-list h4 {
+  margin-bottom: 15px;
+  color: #e50914;
+}
+
+.review-item {
+  background: #2a2a2a;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.review-date {
+  font-size: 12px;
+  color: #b3b3b3;
+  display: block;
+  margin-top: 10px;
+}

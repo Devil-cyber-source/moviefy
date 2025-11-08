@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moviefy - Upload Video</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 { color: #333; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea { resize: vertical; min-height: 100px; }
+        .file-input {
+            border: 2px dashed #667eea;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8f9ff;
+        }
+        .file-input:hover { background: #f0f2ff; }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: translateY(-2px); }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .progress {
+            margin-top: 20px;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .login-section {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Moviefy Admin</h1>
+        <p class="subtitle">Upload videos to your streaming platform</p>
+
+        <div class="login-section" id="loginSection">
+            <h3>Login First</h3>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" value="admin@moviefy.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" value="admin123">
+            </div>
+            <button onclick="login()">Login</button>
+        </div>
+
+        <form id="uploadForm" style="display:none;">
+            <div class="form-group">
+                <label>Movie Title *</label>
+                <input type="text" id="title" required placeholder="Enter movie title">
+            </div>
+
+            <div class="form-group">
+                <label>Description *</label>
+                <textarea id="description" required placeholder="Enter movie description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Category *</label>
+                <select id="category" required>
+                    <option value="">Select category</option>
+                    <option value="Action">Action</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Sci-Fi">Sci-Fi</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Thriller">Thriller</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Year</label>
+                <input type="number" id="year" placeholder="2024" value="2024">
+            </div>
+
+            <div class="form-group">
+                <label>Thumbnail URL *</label>
+                <input type="url" id="thumbnail" required placeholder="https://example.com/image.jpg">
+            </div>
+
+            <div class="form-group">
+                <label>Video File *</label>
+                <div class="file-input" onclick="document.getElementById('video').click()">
+                    <p id="fileName">📁 Click to select video file</p>
+                    <small>Supported: MP4, MKV, AVI, MOV, WebM (Max 5GB)</small>
+                </div>
+                <input type="file" id="video" accept="video/*" style="display:none" onchange="updateFileName()">
+            </div>
+
+            <button type="submit">Upload Video</button>
+
+            <div class="progress" id="progress">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+
+            <div class="message" id="message"></div>
+        </form>
+    </div>
+
+    <script>
+        let token = localStorage.getItem('token');
+
+        if (token) {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('uploadForm').style.display = 'block';
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    token = data.token;
+                    localStorage.setItem('token', token);
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('uploadForm').style.display = 'block';
+                    showMessage('Login successful!', 'success');
+                } else {
+                    showMessage(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showMessage('Connection error: ' + error.message, 'error');
+            }
+        }
+
+        function updateFileName() {
+            const file = document.getElementById('video').files[0];
+            if (file) {
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                document.getElementById('fileName').textContent = `📹 ${file.name} (${sizeMB} MB)`;
+            }
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('year', document.getElementById('year').value);
+            formData.append('thumbnail', document.getElementById('thumbnail').value);
+            formData.append('video', document.getElementById('video').files[0]);
+
+            const progressDiv = document.getElementById('progress');
+            const progressBar = document.getElementById('progressBar');
+            progressDiv.style.display = 'block';
+
+            try {
+                const xhr = new XMLHttpRequest();
+
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        progressBar.style.width = percent + '%';
+                        progressBar.textContent = percent + '%';
+                    }
+                });
+
+                xhr.addEventListener('load', () => {
+                    if (xhr.status === 200) {
+                        const data = JSON.parse(xhr.responseText);
+                        showMessage('✅ Video uploaded successfully!', 'success');
+                        document.getElementById('uploadForm').reset();
+                        document.getElementById('fileName').textContent = '📁 Click to select video file';
+                        progressDiv.style.display = 'none';
+                    } else {
+                        const error = JSON.parse(xhr.responseText);
+                        showMessage('❌ Upload failed: ' + error.error, 'error');
+                    }
+                });
+
+                xhr.addEventListener('error', () => {
+                    showMessage('❌ Upload failed: Network error', 'error');
+                });
+
+                xhr.open('POST', 'http://localhost:5000/api/upload/video');
+                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                xhr.send(formData);
+
+            } catch (error) {
+                showMessage('❌ Error: ' + error.message, 'error');
+            }
+        });
+
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = 'message ' + type;
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

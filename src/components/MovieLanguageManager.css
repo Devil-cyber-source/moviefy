@@ -1,0 +1,208 @@
+.language-manager {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.language-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.language-header h3 {
+  color: #fff;
+  font-size: 18px;
+  margin: 0;
+}
+
+.btn-add {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+
+.btn-add:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.add-language-form {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.add-language-form .form-group {
+  margin-bottom: 15px;
+}
+
+.add-language-form label {
+  display: block;
+  color: #fff;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.add-language-form input,
+.add-language-form select {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.add-language-form input:focus,
+.add-language-form select:focus {
+  outline: none;
+  border-color: #e50914;
+}
+
+.add-language-form small {
+  display: block;
+  color: #999;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.languages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.language-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.language-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.language-info h4 {
+  color: #fff;
+  font-size: 16px;
+  margin: 0;
+}
+
+.language-code {
+  background: rgba(229, 9, 20, 0.2);
+  color: #e50914;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  font-family: monospace;
+}
+
+.language-urls {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.url-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.url-field label {
+  color: #999;
+  font-size: 12px;
+  min-width: 70px;
+}
+
+.url-field input {
+  flex: 1;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.url-field input:focus {
+  outline: none;
+  border-color: #e50914;
+}
+
+.btn-remove {
+  padding: 6px 12px;
+  background: rgba(220, 53, 69, 0.2);
+  border: 1px solid rgba(220, 53, 69, 0.5);
+  color: #ff6b6b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s;
+}
+
+.btn-remove:hover {
+  background: rgba(220, 53, 69, 0.3);
+}
+
+.language-info-box {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  border-radius: 6px;
+}
+
+.language-info-box h4 {
+  color: #64b5f6;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.language-info-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.language-info-box li {
+  color: #ccc;
+  font-size: 13px;
+  padding: 4px 0;
+  line-height: 1.5;
+}
+
+.language-info-box strong {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .url-field {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .url-field label {
+    min-width: auto;
+  }
+  
+  .url-field input {
+    width: 100%;
+  }
+}

@@ -1,0 +1,38 @@
+/* Moviefy Brand Colors - Teal Theme */
+
+:root {
+  /* Primary Teal Colors */
+  --primary: #14B8A6;
+  --primary-dark: #0D9488;
+  --primary-darker: #0F766E;
+  --primary-light: #2DD4BF;
+  --primary-lighter: #5EEAD4;
+  
+  /* Secondary Colors */
+  --secondary: #06B6D4; /* Cyan */
+  --accent: #10B981; /* Emerald */
+  
+  /* Background Colors */
+  --bg-primary: #141414;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2a2a2a;
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #e5e5e5;
+  --text-muted: #b3b3b3;
+  
+  /* Status Colors */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+  --gradient-secondary: linear-gradient(135deg, #2DD4BF 0%, #14B8A6 100%);
+  
+  /* Shadows */
+  --shadow-primary: 0 0 20px rgba(20, 184, 166, 0.6);
+  --shadow-glow: 0 0 30px rgba(20, 184, 166, 0.4);
+}

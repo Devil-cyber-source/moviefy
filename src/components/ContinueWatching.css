@@ -1,0 +1,69 @@
+.continue-watching {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding-left: 4px;
+}
+
+.continue-row {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding: 10px 4px;
+}
+
+.continue-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.continue-card {
+  min-width: 280px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.continue-card:hover {
+  transform: scale(1.05);
+}
+
+.continue-poster {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.continue-poster img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.progress-fill {
+  height: 100%;
+  background: #e50914;
+  transition: width 0.3s;
+}
+
+.continue-info h4 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.continue-info p {
+  font-size: 13px;
+  color: #b3b3b3;
+}
