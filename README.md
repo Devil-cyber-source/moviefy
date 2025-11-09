@@ -1,139 +1,222 @@
-# Moviefy - Complete Streaming Platform
+# 🎬 Moviefy - Netflix Clone
 
-A full-featured streaming platform with authentication, subscriptions, payment gateway, admin panel, and referral system. Like Spotify for movies!
+A modern, feature-rich streaming platform built with React and Node.js.
 
-## 🎬 Features
+## 📁 Project Structure
 
-### 🔐 Authentication System
-- User login and signup
-- Secure password handling
-- Session management
-- Demo accounts included
-
-### 👤 User Features
-- **Profile Management** - View and manage account details
-- **My List** - Add/remove favorite movies
-- **Video Player** - Full-featured video playback
-- **Search & Browse** - Find movies by category or search
-- **Referral System** - Unique referral codes with rewards tracking
-
-### 💳 Subscription & Payment
-- **3 Tier Plans** - Basic ($8.99), Standard ($13.99), Premium ($17.99)
-- **Payment Gateway** - Multiple payment methods:
-  - Credit/Debit Cards (Visa, Mastercard, Amex)
-  - UPI Payment
-  - Digital Wallets (Paytm, PhonePe, Google Pay, Amazon Pay)
-- **Secure Checkout** - Encrypted payment processing
-- **Subscription Management** - Upgrade/downgrade plans anytime
-
-### 🎁 Referral Program
-- Unique referral code for each user
-- Track referred friends
-- Earn rewards (1 month free per 3 referrals)
-- Copy referral code feature
-
-### ⚙️ Admin Dashboard
-- **Movies Management** - Add, edit, delete movies with full details
-- **User Management** - View all users, subscriptions, and referrals
-- **Category Management** - Create and manage movie categories dynamically
-- **Analytics** - Track total movies, users, subscriptions, and categories
-
-## 🚀 Getting Started
-
-1. Install dependencies:
-```bash
-npm install
+```
+moviefy/
+├── frontend/          # React frontend application
+│   ├── src/          # Source code
+│   ├── public/       # Static files
+│   └── package.json  # Frontend dependencies
+│
+├── backend/          # Node.js backend API
+│   ├── routes/       # API routes
+│   ├── models/       # Database models
+│   ├── config/       # Configuration
+│   └── package.json  # Backend dependencies
+│
+├── docs/             # Documentation files
+│   ├── RUN_THIS.md              # Quick deployment guide
+│   ├── GOOGLE_OAUTH_QUICK_FIX.md # Fix Google OAuth
+│   └── WHICH_FILE_TO_USE.md     # Guide to documentation
+│
+├── scripts/          # Deployment and utility scripts
+└── tests/            # Test files and tools
 ```
 
-2. Run the development server:
+## 🚀 Quick Start
+
+### 1. Install Dependencies
+
 ```bash
+# Install frontend dependencies
+npm install
+
+# Install backend dependencies
+cd backend
+npm install
+cd ..
+```
+
+### 2. Setup Environment
+
+Create `.env` file in root:
+```env
+VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
+```
+
+Create `backend/.env` file:
+```env
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+PORT=5000
+```
+
+### 3. Run Development Servers
+
+```bash
+# Terminal 1: Start backend
+cd backend
+npm run dev
+
+# Terminal 2: Start frontend
 npm run dev
 ```
 
-3. Open your browser to http://localhost:5173
+### 4. Access the App
 
-## 🔑 Demo Accounts
+- Frontend: http://localhost:5173
+- Backend: http://localhost:5000
 
-### Admin Account
-- Email: admin@moviefy.com
-- Password: admin123
-- Access: Full admin dashboard with all management features
+## 🎯 Features
 
-### User Account
-- Email: user@moviefy.com
-- Password: user123
-- Access: Standard user features
+- ✅ User authentication (Email, Phone, Google OAuth)
+- ✅ Movie browsing and search
+- ✅ Video streaming
+- ✅ Watchlist management
+- ✅ Subscription plans
+- ✅ Admin dashboard
+- ✅ Referral system
+- ✅ Payment integration (Razorpay)
+- ✅ Real-time database (MongoDB)
 
-## 📱 Pages
+## 📚 Documentation
 
-- `/` - Home (Browse movies)
-- `/login` - Login page
-- `/signup` - Signup with referral code
-- `/profile` - User profile and referral dashboard
-- `/subscription` - Choose subscription plan
-- `/checkout` - Payment gateway
-- `/admin` - Admin dashboard (admin only)
+All documentation is in the `docs/` folder:
+
+### Essential Guides:
+- **[RUN_THIS.md](docs/RUN_THIS.md)** - Deploy to cloud (MongoDB Atlas, Railway, Vercel)
+- **[GOOGLE_OAUTH_QUICK_FIX.md](docs/GOOGLE_OAUTH_QUICK_FIX.md)** - Fix Google OAuth errors
+- **[WHICH_FILE_TO_USE.md](docs/WHICH_FILE_TO_USE.md)** - Guide to all documentation
+
+### Quick Links:
+- [Deployment Guide](docs/DEPLOY_WITH_GITHUB.md)
+- [Database Setup](docs/HOW_TO_VIEW_DATABASE.md)
+- [Google OAuth Setup](docs/SETUP_REAL_GOOGLE_OAUTH.md)
+
+## 🔐 Demo Accounts
+
+For testing without Google OAuth:
+
+- **Admin:** admin@moviefy.com / admin123
+- **User:** user@moviefy.com / user123
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18, React Router DOM
-- **Styling**: CSS3 with modern design
-- **Build Tool**: Vite
-- **Storage**: LocalStorage (simulated backend)
-- **State Management**: React Context API
+### Frontend:
+- React 18
+- React Router
+- Vite
+- CSS3
 
-## 💡 Key Features Explained
+### Backend:
+- Node.js
+- Express
+- MongoDB (Mongoose)
+- JWT Authentication
 
-### Payment Gateway
-- Realistic payment flow with multiple methods
-- Card number formatting and validation
-- UPI ID support
-- Wallet integration
-- Tax calculation (18%)
-- Processing animation
+### Deployment:
+- Frontend: Vercel
+- Backend: Railway
+- Database: MongoDB Atlas
 
-### Subscription System
-- Trial period for new users (30 days)
-- Auto-renewal options
-- Plan comparison
-- Upgrade/downgrade functionality
-- Status tracking (Active, Trial, Expired)
+## 📱 Access from Anywhere
 
-### Referral System
-- Auto-generated unique codes
-- Track referral chain
-- Reward calculation
-- Copy-to-clipboard functionality
+### Current Setup:
+- **Local:** http://localhost:5173
+- **Public URL:** See [YOUR_PUBLIC_URL.md](docs/YOUR_PUBLIC_URL.md)
 
-### Admin Features
-- Tabbed interface (Movies, Users, Categories)
-- Real-time statistics
-- CRUD operations for all entities
-- Dynamic category management
-- User subscription tracking
+### Deploy to Cloud:
+Follow [RUN_THIS.md](docs/RUN_THIS.md) to deploy to:
+- MongoDB Atlas (Database)
+- Railway (Backend)
+- Vercel (Frontend)
 
-## 📦 Build for Production
+**Total time:** 20 minutes | **Cost:** FREE
 
+## 🆘 Troubleshooting
+
+### Google OAuth Not Working?
+→ See [GOOGLE_OAUTH_QUICK_FIX.md](docs/GOOGLE_OAUTH_QUICK_FIX.md)
+
+### Can't Access from Phone?
+→ See [YOUR_PUBLIC_URL.md](docs/YOUR_PUBLIC_URL.md)
+
+### Database Issues?
+→ See [HOW_TO_VIEW_DATABASE.md](docs/HOW_TO_VIEW_DATABASE.md)
+
+### Deployment Help?
+→ See [RUN_THIS.md](docs/RUN_THIS.md)
+
+## 📦 Scripts
+
+### Frontend:
 ```bash
-npm run build
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run preview  # Preview production build
 ```
 
-## 🎨 Design Features
+### Backend:
+```bash
+npm run dev      # Start development server with auto-reload
+npm start        # Start production server
+```
 
-- Netflix-inspired dark theme
-- Smooth animations and transitions
-- Responsive design for all devices
-- Hover effects on movie cards
-- Professional checkout UI
-- Secure payment indicators
+### Deployment:
+```bash
+# See scripts/ folder for automated deployment scripts
+powershell -ExecutionPolicy Bypass -File scripts/deploy-all.ps1
+```
+
+## 🌟 Key Features Explained
+
+### Authentication:
+- Email/Password login
+- Phone OTP login
+- Google OAuth integration
+- JWT-based sessions
+
+### Video Streaming:
+- Upload custom videos
+- YouTube/Vimeo integration
+- Continue watching feature
+- Watchlist management
+
+### Admin Features:
+- User management
+- Movie management
+- Analytics dashboard
+- Pricing control
+
+### Payment:
+- Razorpay integration
+- Multiple subscription plans
+- Referral rewards
+- Trial periods
 
 ## 🔒 Security
 
-- Password encryption simulation
-- Secure payment processing UI
-- Session management
-- Role-based access control (Admin/User)
+- JWT authentication
+- Password hashing (bcrypt)
+- CORS protection
+- Environment variables for secrets
+- MongoDB injection prevention
+
+## 📄 License
+
+This project is for educational purposes.
+
+## 🤝 Contributing
+
+This is a personal project, but feel free to fork and customize!
+
+## 📞 Support
+
+For issues or questions, check the documentation in the `docs/` folder.
 
 ---
 
-Built with ❤️ using React and Vite
+**Made with ❤️ using React and Node.js**
