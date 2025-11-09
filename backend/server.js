@@ -66,6 +66,23 @@ const initializeAdmin = async () => {
 // Initialize after DB connection
 setTimeout(initializeAdmin, 2000)
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Moviefy API is running',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      movies: '/api/movies',
+      upload: '/api/upload',
+      users: '/api/users',
+      payment: '/api/payment'
+    }
+  })
+})
+
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/movies', movieRoutes)
