@@ -1,11 +1,35 @@
 # 🚀 Deploy Your App - Complete Guide
 
 ## 🎯 Goal
-Deploy your Moviefy app so it's accessible from anywhere, anytime, on any device - without running servers manually.
+Deploy your Moviefy app with database and backend so it's accessible from anywhere, anytime, on any device.
 
 **Time:** 30 minutes  
 **Cost:** $0 (FREE)  
-**Result:** Live app accessible 24/7 from anywhere
+**Result:** Live app with real database, accessible 24/7 from anywhere
+
+---
+
+## 📋 What You'll Need
+
+Before starting, make sure you have:
+- ✅ GitHub account (you already have this)
+- ✅ Google account (for MongoDB Atlas signup)
+- ✅ 30 minutes of time
+- ✅ Your code pushed to GitHub (already done)
+
+---
+
+## 🎯 Overview
+
+We'll deploy 3 services:
+
+```
+1. MongoDB Atlas → Database (stores your data)
+2. Railway → Backend API (handles requests)
+3. Vercel → Frontend (your website)
+```
+
+All are FREE and work together!
 
 ---
 
