@@ -6,24 +6,26 @@ A modern, feature-rich streaming platform built with React and Node.js.
 
 ```
 moviefy/
-├── frontend/          # React frontend application
-│   ├── src/          # Source code
-│   ├── public/       # Static files
-│   └── package.json  # Frontend dependencies
+├── frontend/         # React frontend application
+│   ├── src/         # Source code
+│   ├── public/      # Static files
+│   ├── .env         # Environment variables
+│   └── package.json # Frontend dependencies
 │
-├── backend/          # Node.js backend API
-│   ├── routes/       # API routes
-│   ├── models/       # Database models
-│   ├── config/       # Configuration
-│   └── package.json  # Backend dependencies
+├── backend/         # Node.js backend API
+│   ├── routes/      # API routes
+│   ├── models/      # Database models
+│   ├── config/      # Configuration
+│   ├── .env         # Environment variables
+│   └── package.json # Backend dependencies
 │
-├── docs/             # Documentation files
+├── docs/            # Documentation files
 │   ├── RUN_THIS.md              # Quick deployment guide
 │   ├── GOOGLE_OAUTH_QUICK_FIX.md # Fix Google OAuth
 │   └── WHICH_FILE_TO_USE.md     # Guide to documentation
 │
-├── scripts/          # Deployment and utility scripts
-└── tests/            # Test files and tools
+├── scripts/         # Deployment and utility scripts
+└── tests/           # Test files and tools
 ```
 
 ## 🚀 Quick Start
@@ -32,7 +34,9 @@ moviefy/
 
 ```bash
 # Install frontend dependencies
+cd frontend
 npm install
+cd ..
 
 # Install backend dependencies
 cd backend
@@ -42,7 +46,7 @@ cd ..
 
 ### 2. Setup Environment
 
-Create `.env` file in root:
+Create `frontend/.env` file:
 ```env
 VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
 ```
@@ -52,6 +56,7 @@ Create `backend/.env` file:
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 PORT=5000
+FRONTEND_URL=http://localhost:5173
 ```
 
 ### 3. Run Development Servers
@@ -62,6 +67,7 @@ cd backend
 npm run dev
 
 # Terminal 2: Start frontend
+cd frontend
 npm run dev
 ```
 
@@ -154,6 +160,7 @@ Follow [RUN_THIS.md](docs/RUN_THIS.md) to deploy to:
 
 ### Frontend:
 ```bash
+cd frontend
 npm run dev      # Start development server
 npm run build    # Build for production
 npm run preview  # Preview production build
@@ -161,6 +168,7 @@ npm run preview  # Preview production build
 
 ### Backend:
 ```bash
+cd backend
 npm run dev      # Start development server with auto-reload
 npm start        # Start production server
 ```
