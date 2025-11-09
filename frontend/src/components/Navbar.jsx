@@ -6,12 +6,14 @@ import './Navbar.css'
 function Navbar({ onSearch, onCategoryChange }) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
 
   const handleNavClick = (category) => {
     onCategoryChange(category)
     onSearch('')
+    setMobileMenuOpen(false)
   }
 
   const handleLogout = () => {
@@ -27,6 +29,11 @@ function Navbar({ onSearch, onCategoryChange }) {
   return (
     <nav className="navbar">
       <div className="navbar-left">
+        {currentUser?.role !== 'admin' && (
+          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            ☰
+          </button>
+        )}
         <h1 className="logo" onClick={() => currentUser?.role === 'admin' ? navigate('/admin') : handleNavClick('all')}>
           MOVIEFY
         </h1>
@@ -40,6 +47,27 @@ function Navbar({ onSearch, onCategoryChange }) {
           </ul>
         )}
       </div>
+      
+      {/* Mobile Menu */}
+      {mobileMenuOpen && currentUser?.role !== 'admin' && (
+        <div className="mobile-menu">
+          <div className="mobile-menu-item" onClick={() => handleNavClick('all')}>
+            🏠 Home
+          </div>
+          <div className="mobile-menu-item" onClick={() => handleNavClick('trending')}>
+            📺 TV Shows
+          </div>
+          <div className="mobile-menu-item" onClick={() => handleNavClick('action')}>
+            🎬 Movies
+          </div>
+          <div className="mobile-menu-item" onClick={() => handleNavClick('drama')}>
+            ⭐ New & Popular
+          </div>
+          <div className="mobile-menu-item" onClick={() => handleNavClick('mylist')}>
+            📋 My List
+          </div>
+        </div>
+      )}
       
       <div className="navbar-right">
         {currentUser?.role !== 'admin' && (
