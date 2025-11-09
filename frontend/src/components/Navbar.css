@@ -123,6 +123,8 @@
   animation: fadeInDown 0.3s ease-out;
   backdrop-filter: blur(10px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .profile-item {
@@ -147,4 +149,73 @@
 
 .logo {
   cursor: pointer;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px 3%;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .navbar-right {
+    gap: 10px;
+  }
+
+  .search-box.active input {
+    width: 120px;
+  }
+
+  .profile-dropdown {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-height: 60vh;
+    overflow-y: auto;
+    border-radius: 20px 20px 0 0;
+    animation: slideUp 0.3s ease-out;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .profile-item {
+    padding: 16px 20px;
+    font-size: 16px;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar styling for mobile dropdown */
+.profile-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.profile-dropdown::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.profile-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.profile-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
