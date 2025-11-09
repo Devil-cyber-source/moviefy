@@ -15,15 +15,26 @@ function Login() {
   const { login, loginWithPhone, loginWithGoogleOAuth } = useAuth()
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]')
+    const originalText = submitBtn.textContent
+    submitBtn.textContent = 'Signing in...'
+    submitBtn.disabled = true
+
+    // Simulate network delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 300))
 
     const result = login(email, password)
     if (result.success) {
       navigate('/')
     } else {
       setError(result.error)
+      submitBtn.textContent = originalText
+      submitBtn.disabled = false
     }
   }
 

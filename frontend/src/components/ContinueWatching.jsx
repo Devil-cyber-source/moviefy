@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext'
+import OptimizedImage from './OptimizedImage'
 import './ContinueWatching.css'
 
 function ContinueWatching({ onMovieClick }) {
@@ -20,7 +21,11 @@ function ContinueWatching({ onMovieClick }) {
             onClick={() => onMovieClick(item.movie)}
           >
             <div className="continue-poster">
-              <img src={item.movie.poster} alt={item.movie.title} />
+              <OptimizedImage 
+                src={item.movie.poster} 
+                alt={item.movie.title}
+                className="continue-poster-img"
+              />
               <div className="progress-bar">
                 <div 
                   className="progress-fill" 

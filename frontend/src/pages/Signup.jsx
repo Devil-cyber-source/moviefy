@@ -44,7 +44,7 @@ function Signup() {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
 
@@ -69,11 +69,22 @@ function Signup() {
       return
     }
 
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]')
+    const originalText = submitBtn.textContent
+    submitBtn.textContent = 'Creating account...'
+    submitBtn.disabled = true
+
+    // Simulate network delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 300))
+
     const result = signup(email, password, name, referralCode || null)
     if (result.success) {
       navigate('/')
     } else {
       setError(result.error)
+      submitBtn.textContent = originalText
+      submitBtn.disabled = false
     }
   }
 

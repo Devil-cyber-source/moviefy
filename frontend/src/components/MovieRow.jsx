@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext'
+import OptimizedImage from './OptimizedImage'
 import './MovieRow.css'
 
 function MovieRow({ title, movies, onMovieClick }) {
@@ -36,7 +37,11 @@ function MovieRow({ title, movies, onMovieClick }) {
             className="movie-card"
             onClick={() => onMovieClick(movie)}
           >
-            <img src={movie.poster} alt={movie.title} />
+            <OptimizedImage 
+              src={movie.poster} 
+              alt={movie.title}
+              className="movie-poster"
+            />
             <div className="movie-info">
               <h3>{movie.title}</h3>
               <p>{movie.year}</p>

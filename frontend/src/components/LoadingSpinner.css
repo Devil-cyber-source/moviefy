@@ -69,3 +69,30 @@
   border-radius: 50%;
   animation: rotate 1s linear infinite;
 }
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes neonGlow {
+  0%, 100% { text-shadow: 0 0 10px #e50914, 0 0 20px #e50914; }
+  50% { text-shadow: 0 0 20px #e50914, 0 0 40px #e50914, 0 0 60px #e50914; }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .loading-text {
+    font-size: 24px;
+    letter-spacing: 3px;
+  }
+  
+  .netflix-loader {
+    gap: 6px;
+  }
+  
+  .loader-bar {
+    width: 6px;
+    height: 45px;
+  }
+}

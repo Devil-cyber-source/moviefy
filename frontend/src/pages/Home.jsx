@@ -5,6 +5,7 @@ import Hero from '../components/Hero'
 import MovieRow from '../components/MovieRow'
 import VideoPlayer from '../components/VideoPlayer'
 import ContinueWatching from '../components/ContinueWatching'
+import LoadingSpinner from '../components/LoadingSpinner'
 import { useAuth } from '../context/AuthContext'
 import { movies as defaultMovies } from '../data/movies'
 import '../App.css'
@@ -72,6 +73,10 @@ function Home() {
   }
 
   if (!currentUser) return null
+  
+  if (loading) {
+    return <LoadingSpinner fullScreen={true} />
+  }
 
   return (
     <div className="app">

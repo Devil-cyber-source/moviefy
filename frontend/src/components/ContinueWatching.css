@@ -37,10 +37,14 @@
   margin-bottom: 10px;
 }
 
-.continue-poster img {
+.continue-poster img,
+.continue-poster .optimized-image {
   width: 100%;
   height: 160px;
-  object-fit: cover;
+}
+
+.continue-poster .optimized-image .image {
+  height: 160px;
 }
 
 .progress-bar {
