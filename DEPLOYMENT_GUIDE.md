@@ -26,7 +26,7 @@
 2. **IMPORTANT**: Click **"Settings"** → **"Root Directory"** → Set to `backend` (do this FIRST!)
 3. Click **"Variables"** tab → **"Add variables"**:
    ```
-   MONGODB_URI = <paste the MONGO_URL from Step 2>
+  MONGODB_URI = <paste the MONGO_URL from Step 2>
    JWT_SECRET = moviefy_secret_key_2024_change_in_production_12345
    PORT = 5000
    FRONTEND_URL = https://your-frontend-url.railway.app

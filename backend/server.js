@@ -128,6 +128,7 @@ app.use((err, req, res, next) => {
 })
 
 app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is listening on port ${PORT}`)
   console.log(`🚀 Server running on http://localhost:${PORT}`)
   console.log(`🌐 Network access: http://0.0.0.0:${PORT}`)
   console.log(`📁 Upload videos at: http://localhost:${PORT}/api/upload/video`)
