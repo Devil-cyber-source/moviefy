@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "npx serve dist -l tcp://0.0.0.0:$PORT"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
