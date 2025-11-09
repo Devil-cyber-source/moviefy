@@ -3,7 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import db from '../db.js';
+import Movie from '../models/Movie.js';
 import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -49,9 +49,7 @@ router.post('/video', authMiddleware, adminMiddleware, upload.single('video'), a
 
     const videoUrl = `/uploads/videos/${req.file.filename}`;
 
-    await db.read();
-    const movie = {
-      id: Date.now().toString(),
+    const movie = new Movie({
       title,
       description,
       thumbnail,
@@ -59,14 +57,10 @@ router.post('/video', authMiddleware, adminMiddleware, upload.single('video'), a
       category,
       year: parseInt(year),
       uploadedBy: req.user.id,
-      status: 'ready',
-      views: 0,
-      rating: 0,
-      createdAt: new Date().toISOString()
-    };
+      status: 'ready'
+    });
 
-    db.data.movies.push(movie);
-    await db.write();
+    await movie.save();
 
     res.json({
       message: 'Video uploaded successfully',

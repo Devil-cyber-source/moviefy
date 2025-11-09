@@ -1,5 +1,5 @@
 import express from 'express';
-import db from '../db.js';
+import User from '../models/User.js';
 import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -7,12 +7,10 @@ const router = express.Router();
 // Get user profile
 router.get('/profile', authMiddleware, async (req, res) => {
   try {
-    await db.read();
-    const user = db.data.users.find(u => u.id === req.user.id);
+    const user = await User.findById(req.user.id).select('-password');
     if (!user) return res.status(404).json({ error: 'User not found' });
     
-    const { password, ...userWithoutPassword } = user;
-    res.json(userWithoutPassword);
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -21,13 +19,12 @@ router.get('/profile', authMiddleware, async (req, res) => {
 // Add to my list
 router.post('/mylist/:movieId', authMiddleware, async (req, res) => {
   try {
-    await db.read();
-    const user = db.data.users.find(u => u.id === req.user.id);
+    const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
     
     if (!user.myList.includes(req.params.movieId)) {
       user.myList.push(req.params.movieId);
-      await db.write();
+      await user.save();
     }
     res.json({ message: 'Added to list' });
   } catch (error) {
@@ -38,12 +35,11 @@ router.post('/mylist/:movieId', authMiddleware, async (req, res) => {
 // Remove from my list
 router.delete('/mylist/:movieId', authMiddleware, async (req, res) => {
   try {
-    await db.read();
-    const user = db.data.users.find(u => u.id === req.user.id);
+    const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
     
     user.myList = user.myList.filter(id => id !== req.params.movieId);
-    await db.write();
+    await user.save();
     res.json({ message: 'Removed from list' });
   } catch (error) {
     res.status(500).json({ error: error.message });

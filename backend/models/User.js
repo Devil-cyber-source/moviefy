@@ -99,8 +99,7 @@ const userSchema = new mongoose.Schema({
     }
   },
   myList: [{
-    type: Number, // Movie IDs from TMDB
-    default: []
+    type: String, // Movie IDs (can be TMDB IDs or MongoDB ObjectIds)
   }],
   isActive: {
     type: Boolean,
