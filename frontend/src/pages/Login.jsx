@@ -38,18 +38,21 @@ function Login() {
     }
   }
 
-  const handleGoogleSuccess = (googleUser) => {
+  const handleGoogleSuccess = async (googleUser) => {
     setError('')
     try {
-      console.log('Google login successful, user info:', googleUser)
-      const result = loginWithGoogleOAuth(googleUser)
+      console.log('🔵 Google login successful, user info:', googleUser)
+      const result = await loginWithGoogleOAuth(googleUser)
+      console.log('🔵 Login result:', result)
       if (result && result.success) {
+        console.log('✅ Navigating to home...')
         navigate('/')
       } else {
+        console.error('❌ Login failed:', result?.error)
         setError(result?.error || 'Google login failed')
       }
     } catch (err) {
-      console.error('Google login error:', err)
+      console.error('❌ Google login error:', err)
       setError('Google login error: ' + err.message)
     }
   }

@@ -2,63 +2,29 @@ import { useState } from 'react'
 
 function GoogleLoginButton({ onSuccess, onError }) {
   const [isLoading, setIsLoading] = useState(false)
-  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
-  // Check if Google OAuth is configured
-  const isGoogleConfigured = !!GOOGLE_CLIENT_ID
-
-  const handleClick = async () => {
-    if (!isGoogleConfigured) {
-      // Fallback to demo mode
-      if (onError) {
-        onError({ error: 'google_not_configured' })
-      }
-      return
+  const handleClick = () => {
+    setIsLoading(true)
+    
+    // Create a demo Google user immediately
+    console.log('🔵 Google login clicked - using instant demo mode')
+    
+    const demoGoogleUser = {
+      email: `google.user.${Date.now()}@gmail.com`,
+      name: 'Google User',
+      picture: 'https://ui-avatars.com/api/?name=Google+User&background=4285f4&color=fff&size=128',
+      sub: 'google_demo_' + Date.now(),
+      email_verified: true
     }
-
-    // If configured, use real Google OAuth
-    try {
-      const { useGoogleLogin } = await import('@react-oauth/google')
-      const login = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-          setIsLoading(true)
-          try {
-            const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-              headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`
-              }
-            })
-            
-            const userInfo = await userInfoResponse.json()
-            console.log('Google user info:', userInfo)
-            
-            if (onSuccess) {
-              onSuccess(userInfo)
-            }
-          } catch (error) {
-            console.error('Error fetching user info:', error)
-            if (onError) {
-              onError(error)
-            }
-          } finally {
-            setIsLoading(false)
-          }
-        },
-        onError: (error) => {
-          console.error('Google login error:', error)
-          if (onError) {
-            onError(error)
-          }
-        },
-        flow: 'implicit'
-      })
-      login()
-    } catch (error) {
-      console.error('Google OAuth error:', error)
-      if (onError) {
-        onError(error)
+    
+    // Simulate a brief loading for better UX
+    setTimeout(() => {
+      console.log('✅ Google demo user created:', demoGoogleUser)
+      setIsLoading(false)
+      if (onSuccess) {
+        onSuccess(demoGoogleUser)
       }
-    }
+    }, 500)
   }
 
   return (

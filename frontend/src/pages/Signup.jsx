@@ -88,18 +88,21 @@ function Signup() {
     }
   }
 
-  const handleGoogleSuccess = (googleUser) => {
+  const handleGoogleSuccess = async (googleUser) => {
     setError('')
     try {
-      console.log('Google signup successful, user info:', googleUser)
-      const result = loginWithGoogleOAuth(googleUser)
+      console.log('🔵 Google signup successful, user info:', googleUser)
+      const result = await loginWithGoogleOAuth(googleUser)
+      console.log('🔵 Signup result:', result)
       if (result && result.success) {
+        console.log('✅ Navigating to home...')
         navigate('/')
       } else {
+        console.error('❌ Signup failed:', result?.error)
         setError(result?.error || 'Google signup failed')
       }
     } catch (err) {
-      console.error('Google signup error:', err)
+      console.error('❌ Google signup error:', err)
       setError('Google signup error: ' + err.message)
     }
   }
