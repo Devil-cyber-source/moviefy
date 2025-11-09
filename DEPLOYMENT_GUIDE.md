@@ -23,28 +23,28 @@
 
 ### Step 3: Deploy Backend
 1. Click **"+ New"** → **"GitHub Repo"** → Select **moviefy**
-2. Click **"Add variables"**:
+2. **IMPORTANT**: Click **"Settings"** → **"Root Directory"** → Set to `backend` (do this FIRST!)
+3. Click **"Variables"** tab → **"Add variables"**:
    ```
    MONGODB_URI = <paste the MONGO_URL from Step 2>
    JWT_SECRET = moviefy_secret_key_2024_change_in_production_12345
    PORT = 5000
    FRONTEND_URL = https://your-frontend-url.railway.app
    ```
-3. Click **"Settings"** → **"Root Directory"** → Set to `backend`
-4. Click **"Deploy"**
-5. Once deployed, click **"Settings"** → **"Generate Domain"**
-6. Copy your backend URL (e.g., `https://moviefy-backend.railway.app`)
+4. Click **"Deployments"** → **"Redeploy"** (if needed)
+5. Once deployed, click **"Settings"** → **"Networking"** → **"Generate Domain"**
+6. Copy your backend URL (e.g., `https://moviefy-backend.up.railway.app`)
 
 ### Step 4: Deploy Frontend
 1. Click **"+ New"** → **"GitHub Repo"** → Select **moviefy** again
-2. Click **"Add variables"**:
+2. **IMPORTANT**: Click **"Settings"** → **"Root Directory"** → Set to `frontend` (do this FIRST!)
+3. Click **"Variables"** tab → **"Add variables"**:
    ```
    VITE_API_URL = <paste your backend URL from Step 3>
    ```
-3. Click **"Settings"** → **"Root Directory"** → Set to `frontend`
-4. Click **"Deploy"**
-5. Once deployed, click **"Settings"** → **"Generate Domain"**
-6. Copy your frontend URL (e.g., `https://moviefy.railway.app`)
+4. Click **"Deployments"** → **"Redeploy"** (if needed)
+5. Once deployed, click **"Settings"** → **"Networking"** → **"Generate Domain"**
+6. Copy your frontend URL (e.g., `https://moviefy.up.railway.app`)
 
 ### Step 5: Update Backend FRONTEND_URL
 1. Go back to your **Backend service**
@@ -94,15 +94,31 @@ This is enough for:
 
 ## 🐛 Troubleshooting
 
+### "Route not found" error?
+**This means Railway is using the wrong root directory!**
+
+**Fix:**
+1. Go to your service in Railway
+2. Click **"Settings"** → **"Root Directory"**
+3. Set to `backend` for backend service
+4. Set to `frontend` for frontend service
+5. Click **"Redeploy"**
+
 ### Backend won't start?
 - Check **"Deployments"** tab for error logs
 - Verify all environment variables are set
 - Make sure MONGODB_URI is correct
+- Verify Root Directory is set to `backend`
+
+### Frontend shows blank page?
+- Check VITE_API_URL is set correctly
+- Verify Root Directory is set to `frontend`
+- Check build logs for errors
 
 ### Frontend shows API errors?
-- Check VITE_API_URL is set correctly
+- Check VITE_API_URL is set correctly (should end with your backend domain)
 - Make sure backend is deployed and running
-- Check backend logs for errors
+- Test backend URL directly: `https://your-backend.railway.app/api/health`
 
 ### Database connection failed?
 - Verify MONGODB_URI in backend variables
