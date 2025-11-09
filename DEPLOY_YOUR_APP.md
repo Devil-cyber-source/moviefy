@@ -163,7 +163,7 @@ Value: [Paste your MongoDB connection string from Step 1.6]
 
 **Variable 3:**
 ```
-Name: JWT_SECRET
+Name:JWT_SECRET
 Value: moviefy_super_secret_key_change_this_in_production_12345
 ```
 
