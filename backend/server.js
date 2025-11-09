@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5000
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || '*', // Allow all origins in development
   credentials: true
 }))
 app.use(express.json())
@@ -110,8 +110,11 @@ app.use((err, req, res, next) => {
   })
 })
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`)
+  console.log(`🌐 Network access: http://0.0.0.0:${PORT}`)
   console.log(`📁 Upload videos at: http://localhost:${PORT}/api/upload/video`)
   console.log(`🔗 Frontend: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`)
+  console.log(`\n💡 To access from other devices on your network:`)
+  console.log(`   Find your IP address and use: http://YOUR_IP:${PORT}`)
 })
