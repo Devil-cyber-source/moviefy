@@ -1,230 +1,291 @@
 # 🎬 Moviefy - Netflix Clone
 
-A modern, feature-rich streaming platform built with React and Node.js.
+A modern, feature-rich streaming platform built with React, Node.js, and MongoDB.
+
+## 🚀 Quick Start
+
+### 1. Install Dependencies
+```bash
+# Frontend
+cd frontend && npm install
+
+# Backend
+cd backend && npm install
+```
+
+### 2. Run Development Servers
+```bash
+# Terminal 1 - Backend
+cd backend
+npm start
+
+# Terminal 2 - Frontend
+cd frontend
+npm run dev
+```
+
+### 3. Access the App
+- **Frontend:** http://localhost:5173
+- **Backend:** http://localhost:5000
+- **Network:** http://172.16.2.39:5173 (from any device on same WiFi)
+
+---
+
+## 🎯 Features
+
+### User Features
+- ✅ Multiple login methods (Email, Phone OTP, Google)
+- ✅ Browse and search movies
+- ✅ Video streaming
+- ✅ My List / Watchlist
+- ✅ Continue watching
+- ✅ Subscription plans
+- ✅ Referral system
+- ✅ Watch party
+
+### Admin Features
+- ✅ Add/Edit/Delete movies
+- ✅ User management
+- ✅ Analytics dashboard
+- ✅ Video upload
+- ✅ Subscription management
+
+### Technical Features
+- ✅ Lazy loading images
+- ✅ Mobile responsive
+- ✅ Error boundaries
+- ✅ Performance optimized
+- ✅ Real-time database
+- ✅ JWT authentication
+
+---
+
+## 🔐 Demo Accounts
+
+**Admin:**
+- Email: `admin@moviefy.com`
+- Password: `admin123`
+
+**User:**
+- Email: `user@moviefy.com`
+- Password: `user123`
+
+**Google Login:**
+- Click "Continue with Google" (instant demo mode)
+
+**Phone Login:**
+- Enter any phone number
+- OTP: `123456`
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+- React 18 + Vite
+- React Router
+- CSS3
+
+**Backend:**
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT Authentication
+
+**Features:**
+- Google OAuth
+- Razorpay Payment
+- Video Streaming
+- Real-time Updates
+
+---
+
+## 📱 Access from Anywhere
+
+### Local Network (Same WiFi)
+```
+http://172.16.2.39:5173
+```
+Access from phone, tablet, or any device on same WiFi!
+
+### Internet Access (Ngrok)
+```bash
+ngrok http 5173
+```
+Share the HTTPS URL with anyone!
+
+### Permanent Deployment
+See `COMPLETE_GUIDE.md` for deploying to:
+- Render (Free)
+- Vercel (Free)
+- Railway (Free)
+
+---
 
 ## 📁 Project Structure
 
 ```
 moviefy/
-├── frontend/         # React frontend application
-│   ├── src/         # Source code
-│   ├── public/      # Static files
-│   ├── .env         # Environment variables
-│   └── package.json # Frontend dependencies
+├── frontend/          # React app
+│   ├── src/
+│   │   ├── components/  # Reusable components
+│   │   ├── pages/       # Page components
+│   │   ├── context/     # React context
+│   │   ├── services/    # API services
+│   │   └── data/        # Static data
+│   └── package.json
 │
-├── backend/         # Node.js backend API
-│   ├── routes/      # API routes
-│   ├── models/      # Database models
-│   ├── config/      # Configuration
-│   ├── .env         # Environment variables
-│   └── package.json # Backend dependencies
+├── backend/           # Node.js API
+│   ├── routes/        # API routes
+│   ├── models/        # MongoDB models
+│   ├── config/        # Configuration
+│   └── package.json
 │
-├── docs/            # Documentation files
-│   ├── RUN_THIS.md              # Quick deployment guide
-│   ├── GOOGLE_OAUTH_QUICK_FIX.md # Fix Google OAuth
-│   └── WHICH_FILE_TO_USE.md     # Guide to documentation
-│
-├── scripts/         # Deployment and utility scripts
-└── tests/           # Test files and tools
+├── COMPLETE_GUIDE.md  # Full documentation
+└── README.md          # This file
 ```
 
-## 🚀 Quick Start
+---
 
-### 1. Install Dependencies
+## 🔧 Environment Variables
 
-```bash
-# Install frontend dependencies
-cd frontend
-npm install
-cd ..
-
-# Install backend dependencies
-cd backend
-npm install
-cd ..
-```
-
-### 2. Setup Environment
-
-Create `frontend/.env` file:
+**Backend (.env):**
 ```env
-VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
-```
-
-Create `backend/.env` file:
-```env
-MONGODB_URI=your_mongodb_connection_string
+MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_secret_key
-PORT=5000
 FRONTEND_URL=http://localhost:5173
+PORT=5000
 ```
 
-### 3. Run Development Servers
+**Frontend (.env):**
+```env
+VITE_API_URL=http://localhost:5000
+VITE_GOOGLE_CLIENT_ID=optional
+```
 
+---
+
+## 📦 Available Scripts
+
+**Frontend:**
 ```bash
-# Terminal 1: Start backend
-cd backend
-npm run dev
-
-# Terminal 2: Start frontend
-cd frontend
-npm run dev
+npm run dev      # Development server
+npm run build    # Production build
+npm run preview  # Preview build
 ```
 
-### 4. Access the App
-
-- Frontend: http://localhost:5173
-- Backend: http://localhost:5000
-
-## 🎯 Features
-
-- ✅ User authentication (Email, Phone, Google OAuth)
-- ✅ Movie browsing and search
-- ✅ Video streaming
-- ✅ Watchlist management
-- ✅ Subscription plans
-- ✅ Admin dashboard
-- ✅ Referral system
-- ✅ Payment integration (Razorpay)
-- ✅ Real-time database (MongoDB)
-
-## 📚 Documentation
-
-All documentation is in the `docs/` folder:
-
-### Essential Guides:
-- **[RUN_THIS.md](docs/RUN_THIS.md)** - Deploy to cloud (MongoDB Atlas, Railway, Vercel)
-- **[GOOGLE_OAUTH_QUICK_FIX.md](docs/GOOGLE_OAUTH_QUICK_FIX.md)** - Fix Google OAuth errors
-- **[WHICH_FILE_TO_USE.md](docs/WHICH_FILE_TO_USE.md)** - Guide to all documentation
-
-### Quick Links:
-- [Deployment Guide](docs/DEPLOY_WITH_GITHUB.md)
-- [Database Setup](docs/HOW_TO_VIEW_DATABASE.md)
-- [Google OAuth Setup](docs/SETUP_REAL_GOOGLE_OAUTH.md)
-
-## 🔐 Demo Accounts
-
-For testing without Google OAuth:
-
-- **Admin:** admin@moviefy.com / admin123
-- **User:** user@moviefy.com / user123
-
-## 🛠️ Tech Stack
-
-### Frontend:
-- React 18
-- React Router
-- Vite
-- CSS3
-
-### Backend:
-- Node.js
-- Express
-- MongoDB (Mongoose)
-- JWT Authentication
-
-### Deployment:
-- Frontend: Vercel
-- Backend: Railway
-- Database: MongoDB Atlas
-
-## 📱 Access from Anywhere
-
-### Current Setup:
-- **Local:** http://localhost:5173
-- **Public URL:** See [YOUR_PUBLIC_URL.md](docs/YOUR_PUBLIC_URL.md)
-
-### Deploy to Cloud:
-Follow [RUN_THIS.md](docs/RUN_THIS.md) to deploy to:
-- MongoDB Atlas (Database)
-- Railway (Backend)
-- Vercel (Frontend)
-
-**Total time:** 20 minutes | **Cost:** FREE
-
-## 🆘 Troubleshooting
-
-### Google OAuth Not Working?
-→ See [GOOGLE_OAUTH_QUICK_FIX.md](docs/GOOGLE_OAUTH_QUICK_FIX.md)
-
-### Can't Access from Phone?
-→ See [YOUR_PUBLIC_URL.md](docs/YOUR_PUBLIC_URL.md)
-
-### Database Issues?
-→ See [HOW_TO_VIEW_DATABASE.md](docs/HOW_TO_VIEW_DATABASE.md)
-
-### Deployment Help?
-→ See [RUN_THIS.md](docs/RUN_THIS.md)
-
-## 📦 Scripts
-
-### Frontend:
+**Backend:**
 ```bash
-cd frontend
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build
+npm start        # Start server
+npm run dev      # Development mode
 ```
 
-### Backend:
-```bash
-cd backend
-npm run dev      # Start development server with auto-reload
-npm start        # Start production server
-```
+---
 
-### Deployment:
-```bash
-# See scripts/ folder for automated deployment scripts
-powershell -ExecutionPolicy Bypass -File scripts/deploy-all.ps1
-```
+## 🎨 Key Features Explained
 
-## 🌟 Key Features Explained
+### Authentication
+- Email/Password with validation
+- Phone OTP (demo mode)
+- Google OAuth (instant demo)
+- JWT sessions
+- Password change
 
-### Authentication:
-- Email/Password login
-- Phone OTP login
-- Google OAuth integration
-- JWT-based sessions
-
-### Video Streaming:
+### Video Management
 - Upload custom videos
 - YouTube/Vimeo integration
-- Continue watching feature
-- Watchlist management
+- Continue watching
+- Watch history
+- My List
 
-### Admin Features:
-- User management
-- Movie management
-- Analytics dashboard
-- Pricing control
-
-### Payment:
+### Subscriptions
+- Multiple plans (Basic, Standard, Premium)
 - Razorpay integration
-- Multiple subscription plans
-- Referral rewards
 - Trial periods
+- Auto-renewal
+- Referral rewards
+
+### Admin Panel
+- User analytics
+- Movie management
+- Upload videos
+- Pricing control
+- Database viewer
+
+---
+
+## 🚀 Deployment
+
+### Quick Deploy (20 minutes)
+
+1. **MongoDB Atlas** (Database)
+   - Create free cluster
+   - Get connection string
+
+2. **Render** (Backend)
+   - Deploy from GitHub
+   - Add environment variables
+
+3. **Vercel** (Frontend)
+   - Deploy from GitHub
+   - Add API URL
+
+**See `COMPLETE_GUIDE.md` for detailed steps!**
+
+---
 
 ## 🔒 Security
 
-- JWT authentication
-- Password hashing (bcrypt)
-- CORS protection
-- Environment variables for secrets
-- MongoDB injection prevention
+- ✅ JWT authentication
+- ✅ Password hashing (bcrypt)
+- ✅ CORS protection
+- ✅ Environment variables
+- ✅ Input validation
+- ✅ MongoDB injection prevention
+
+---
+
+## 📱 Mobile Support
+
+- ✅ Fully responsive design
+- ✅ Touch-friendly interface
+- ✅ Mobile navigation
+- ✅ Optimized performance
+- ✅ Network access enabled
+
+---
+
+## 🆘 Troubleshooting
+
+**Can't access from phone?**
+- Make sure on same WiFi
+- Use: `http://172.16.2.39:5173`
+
+**Google login not working?**
+- It's in demo mode (works instantly)
+- No configuration needed
+
+**Database connection failed?**
+- Check MongoDB URI in `.env`
+- Make sure MongoDB is running
+
+**Port already in use?**
+- Change PORT in backend `.env`
+- Update VITE_API_URL in frontend
+
+---
 
 ## 📄 License
 
 This project is for educational purposes.
 
+---
+
 ## 🤝 Contributing
 
-This is a personal project, but feel free to fork and customize!
-
-## 📞 Support
-
-For issues or questions, check the documentation in the `docs/` folder.
+Feel free to fork and customize!
 
 ---
 
-**Made with ❤️ using React and Node.js**
+**Made with ❤️ using React, Node.js, and MongoDB**
+
+**For detailed documentation, see `COMPLETE_GUIDE.md`**
