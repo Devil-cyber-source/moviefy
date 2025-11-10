@@ -10,6 +10,7 @@ import uploadRoutes from './routes/upload.js'
 import userRoutes from './routes/users.js'
 import paymentRoutes from './routes/payment.js'
 import phoneAuthRoutes from './routes/phoneAuth.js'
+import hiddenMoviesRoutes from './routes/hiddenMovies.js'
 import User from './models/User.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -91,6 +92,7 @@ app.use('/api/upload', uploadRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/payment', paymentRoutes)
 app.use('/api/phone', phoneAuthRoutes)
+app.use('/api/hidden-movies', hiddenMoviesRoutes)
 
 // Health check
 app.get('/api/health', async (req, res) => {

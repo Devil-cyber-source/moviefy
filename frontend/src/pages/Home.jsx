@@ -32,10 +32,22 @@ function Home() {
   const loadMovies = async () => {
     setLoading(true)
     try {
-      // Get list of deleted movie IDs
-      const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
       
-      // Try to fetch from API first
+      // Fetch hidden movie IDs from database
+      let hiddenIds = []
+      try {
+        const hiddenResponse = await fetch(`${apiUrl}/api/hidden-movies`)
+        if (hiddenResponse.ok) {
+          const hiddenData = await hiddenResponse.json()
+          hiddenIds = hiddenData.hiddenIds || []
+          console.log('✅ Loaded hidden movies:', hiddenIds.length)
+        }
+      } catch (err) {
+        console.log('⚠️ Could not load hidden movies')
+      }
+      
+      // Try to fetch movies from API
       const response = await fetch(API_ENDPOINTS.MOVIES)
       if (response.ok) {
         const apiMovies = await response.json()
@@ -53,8 +65,11 @@ function Home() {
           }
         })
         
-        // Filter out deleted movies
-        const filteredMovies = allMovies.filter(m => !deletedIds.includes(m.id) && !deletedIds.includes(m._id))
+        // Filter out hidden movies
+        const filteredMovies = allMovies.filter(m => {
+          const movieId = String(m._id || m.id)
+          return !hiddenIds.includes(movieId)
+        })
         
         setMovies(filteredMovies)
         localStorage.setItem('movies', JSON.stringify(filteredMovies))
@@ -63,12 +78,8 @@ function Home() {
       }
     } catch (error) {
       console.log('⚠️ Using default movies (API not available)')
-      // Get list of deleted movie IDs
-      const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
-      // Filter out deleted movies from default
-      const filteredMovies = defaultMovies.filter(m => !deletedIds.includes(m.id))
-      setMovies(filteredMovies)
-      localStorage.setItem('movies', JSON.stringify(filteredMovies))
+      setMovies(defaultMovies)
+      localStorage.setItem('movies', JSON.stringify(defaultMovies))
     } finally {
       setLoading(false)
     }

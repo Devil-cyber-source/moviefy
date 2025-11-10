@@ -49,10 +49,21 @@ function Admin() {
 
   const loadMovies = async () => {
     try {
-      // Get list of deleted movie IDs
-      const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
-      
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      
+      // Fetch hidden movie IDs from database
+      let hiddenIds = []
+      try {
+        const hiddenResponse = await fetch(`${apiUrl}/api/hidden-movies`)
+        if (hiddenResponse.ok) {
+          const hiddenData = await hiddenResponse.json()
+          hiddenIds = hiddenData.hiddenIds || []
+          console.log('✅ Admin loaded hidden movies:', hiddenIds.length)
+        }
+      } catch (err) {
+        console.log('⚠️ Could not load hidden movies')
+      }
+      
       const response = await fetch(`${apiUrl}/api/movies`)
       
       if (response.ok) {
@@ -70,8 +81,11 @@ function Admin() {
           }
         })
         
-        // Filter out deleted movies
-        const filteredMovies = allMovies.filter(m => !deletedIds.includes(m.id) && !deletedIds.includes(m._id))
+        // Filter out hidden movies
+        const filteredMovies = allMovies.filter(m => {
+          const movieId = String(m._id || m.id)
+          return !hiddenIds.includes(movieId)
+        })
         
         setMovies(filteredMovies)
         localStorage.setItem('movies', JSON.stringify(filteredMovies))
@@ -80,12 +94,8 @@ function Admin() {
       }
     } catch (error) {
       console.log('⚠️ Admin using default movies (API not available)')
-      // Get list of deleted movie IDs
-      const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
-      // Filter out deleted movies from default
-      const filteredMovies = defaultMovies.filter(m => !deletedIds.includes(m.id))
-      setMovies(filteredMovies)
-      localStorage.setItem('movies', JSON.stringify(filteredMovies))
+      setMovies(defaultMovies)
+      localStorage.setItem('movies', JSON.stringify(defaultMovies))
     }
   }
 
@@ -188,7 +198,7 @@ function Admin() {
   }
 
   const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this movie?')) {
+    if (!confirm('Are you sure you want to delete this movie? This will hide it for all users.')) {
       return
     }
 
@@ -196,29 +206,27 @@ function Admin() {
       const token = localStorage.getItem('token')
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
       
-      // Try to delete from API (for database movies)
-      const response = await fetch(`${apiUrl}/api/movies/${id}`, {
-        method: 'DELETE',
+      // Hide movie in database (works for both static and database movies)
+      const response = await fetch(`${apiUrl}/api/hidden-movies/${id}`, {
+        method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       })
 
       if (response.ok) {
-        console.log('✅ Movie deleted from database')
+        console.log('✅ Movie hidden in database for all users')
+        alert('✅ Movie deleted successfully! It will be hidden for all users.')
       } else {
-        console.log('⚠️ API delete failed, marking as deleted locally')
+        console.log('⚠️ API hide failed')
+        alert('⚠️ Failed to delete movie. Please try again.')
+        return
       }
     } catch (error) {
-      console.log('⚠️ API not available, marking as deleted locally')
-    }
-
-    // Track deleted movie IDs (for static movies that can't be deleted from source)
-    const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
-    const movieToDelete = movies.find(m => m.id === id || m._id === id)
-    if (movieToDelete) {
-      deletedIds.push(movieToDelete.id || movieToDelete._id)
-      localStorage.setItem('deletedMovies', JSON.stringify(deletedIds))
+      console.log('⚠️ API not available:', error)
+      alert('⚠️ Cannot connect to server. Please check your connection.')
+      return
     }
 
     // Update local state
