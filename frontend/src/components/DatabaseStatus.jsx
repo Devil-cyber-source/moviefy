@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import API_URL from '../config/api'
 import './DatabaseStatus.css'
 
 function DatabaseStatus() {
@@ -11,7 +12,7 @@ function DatabaseStatus() {
 
   const checkBackend = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/health')
+      const response = await fetch(`${API_URL}/api/health`)
       const data = await response.json()
       if (data.status === 'ok' && data.database === 'MongoDB') {
         setStatus('connected')

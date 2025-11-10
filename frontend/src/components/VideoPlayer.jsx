@@ -9,9 +9,10 @@ function VideoPlayer({ movie, onClose }) {
   const [showRating, setShowRating] = useState(false)
 
   // Check if video is YouTube, Vimeo, or uploaded file
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
   const isYouTube = movie.videoUrl?.includes('youtube.com') || movie.videoUrl?.includes('youtu.be') || movie.videoUrl?.startsWith('youtube:')
   const isVimeo = movie.videoUrl?.includes('vimeo.com') || movie.videoUrl?.startsWith('vimeo:')
-  const isUploaded = movie.videoUrl?.startsWith('/uploads/') || movie.videoUrl?.startsWith('http://localhost:5000/uploads/')
+  const isUploaded = movie.videoUrl?.startsWith('/uploads/') || movie.videoUrl?.startsWith(`${API_URL}/uploads/`)
 
   // Extract video ID
   const getVideoId = () => {
@@ -103,7 +104,7 @@ function VideoPlayer({ movie, onClose }) {
             poster={movie.backdrop}
           >
             <source 
-              src={isUploaded ? `http://localhost:5000${movie.videoUrl}` : movie.videoUrl} 
+              src={isUploaded ? `${API_URL}${movie.videoUrl}` : movie.videoUrl} 
               type="video/mp4" 
             />
             Your browser does not support the video tag.

@@ -117,7 +117,8 @@ function Admin() {
           setUploading(false)
         })
 
-        xhr.open('POST', 'http://localhost:5000/api/upload/video')
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+        xhr.open('POST', `${apiUrl}/api/upload/video`)
         xhr.setRequestHeader('Authorization', `Bearer ${token}`)
         xhr.send(uploadFormData)
 
@@ -971,7 +972,8 @@ function Admin() {
                   setUploading(false)
                 })
 
-                xhr.open('POST', 'http://localhost:5000/api/upload/video')
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+                xhr.open('POST', `${apiUrl}/api/upload/video`)
                 xhr.setRequestHeader('Authorization', `Bearer ${token}`)
                 xhr.send(uploadFormData)
 
