@@ -252,6 +252,54 @@ function Admin() {
     localStorage.setItem('movies', JSON.stringify(updatedMovies))
   }
 
+  const handleBulkDelete = async () => {
+    if (selectedMovies.length === 0) {
+      alert('⚠️ Please select movies to delete')
+      return
+    }
+
+    if (!confirm(`Are you sure you want to delete ${selectedMovies.length} movies? This will hide them for all users.`)) {
+      return
+    }
+
+    console.log('🗑️ Bulk deleting movies:', selectedMovies)
+
+    try {
+      const token = localStorage.getItem('token')
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      
+      const response = await fetch(`${apiUrl}/api/hidden-movies/bulk/hide`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ movieIds: selectedMovies })
+      })
+
+      const responseData = await response.json()
+      console.log('📥 Bulk delete response:', responseData)
+
+      if (response.ok) {
+        console.log('✅ Bulk delete successful')
+        alert(`✅ ${selectedMovies.length} movies deleted successfully! Refresh to see changes.`)
+        
+        // Update local state
+        const updatedMovies = movies.filter(m => !selectedMovies.includes(m.id) && !selectedMovies.includes(m._id))
+        setMovies(updatedMovies)
+        localStorage.setItem('movies', JSON.stringify(updatedMovies))
+        setSelectedMovies([])
+        setSelectMode(false)
+      } else {
+        console.error('❌ Bulk delete failed:', responseData)
+        alert(`⚠️ Failed to delete movies: ${responseData.error || 'Unknown error'}`)
+      }
+    } catch (error) {
+      console.error('❌ Bulk delete error:', error)
+      alert(`⚠️ Cannot connect to server: ${error.message}`)
+    }
+  }
+
   const toggleSelectMovie = (id) => {
     if (selectedMovies.includes(id)) {
       setSelectedMovies(selectedMovies.filter(movieId => movieId !== id))
@@ -268,20 +316,7 @@ function Admin() {
     }
   }
 
-  const handleBulkDelete = () => {
-    if (selectedMovies.length === 0) {
-      alert('Please select movies to delete')
-      return
-    }
-    
-    if (confirm(`Are you sure you want to delete ${selectedMovies.length} movie(s)?`)) {
-      const updatedMovies = movies.filter(m => !selectedMovies.includes(m.id))
-      setMovies(updatedMovies)
-      localStorage.setItem('movies', JSON.stringify(updatedMovies))
-      setSelectedMovies([])
-      setSelectMode(false)
-    }
-  }
+
 
   const cancelSelectMode = () => {
     setSelectMode(false)

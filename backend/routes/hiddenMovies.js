@@ -59,6 +59,50 @@ router.post('/:movieId', authMiddleware, adminMiddleware, async (req, res) => {
   }
 });
 
+// Bulk hide movies (admin only)
+router.post('/bulk/hide', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const { movieIds } = req.body;
+    
+    if (!movieIds || !Array.isArray(movieIds) || movieIds.length === 0) {
+      return res.status(400).json({ error: 'movieIds array is required' });
+    }
+    
+    console.log('🗑️ Bulk hiding movies:', movieIds.length);
+    
+    // Try to delete from database
+    const dbDeleteResult = await Movie.deleteMany({ _id: { $in: movieIds } });
+    console.log('✅ Deleted from database:', dbDeleteResult.deletedCount);
+    
+    // Add all to hidden movies list
+    const hiddenMovies = [];
+    for (const movieId of movieIds) {
+      const hiddenMovie = await HiddenMovie.findOneAndUpdate(
+        { movieId: String(movieId) },
+        { 
+          movieId: String(movieId),
+          deletedBy: req.user.id,
+          deletedAt: new Date()
+        },
+        { upsert: true, new: true }
+      );
+      hiddenMovies.push(hiddenMovie);
+    }
+    
+    console.log('✅ Bulk hide complete. Total hidden:', await HiddenMovie.countDocuments());
+    
+    res.json({ 
+      success: true,
+      message: `${movieIds.length} movies hidden successfully`,
+      count: movieIds.length,
+      hiddenMovies 
+    });
+  } catch (error) {
+    console.error('❌ Bulk hide error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Unhide a movie (admin only)
 router.delete('/:movieId', authMiddleware, adminMiddleware, async (req, res) => {
   try {
