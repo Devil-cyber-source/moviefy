@@ -12,6 +12,9 @@ if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
   );
+  console.log('✅ Twilio initialized for phone auth');
+} else {
+  console.log('⚠️ Twilio not configured - phone auth will work in demo mode (OTP: 123456)');
 }
 
 // Store OTPs temporarily (in production, use Redis)
