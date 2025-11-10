@@ -32,6 +32,9 @@ function Home() {
   const loadMovies = async () => {
     setLoading(true)
     try {
+      // Get list of deleted movie IDs
+      const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
+      
       // Try to fetch from API first
       const response = await fetch(API_ENDPOINTS.MOVIES)
       if (response.ok) {
@@ -50,16 +53,22 @@ function Home() {
           }
         })
         
-        setMovies(allMovies)
-        localStorage.setItem('movies', JSON.stringify(allMovies))
+        // Filter out deleted movies
+        const filteredMovies = allMovies.filter(m => !deletedIds.includes(m.id) && !deletedIds.includes(m._id))
+        
+        setMovies(filteredMovies)
+        localStorage.setItem('movies', JSON.stringify(filteredMovies))
       } else {
         throw new Error('API not available')
       }
     } catch (error) {
       console.log('⚠️ Using default movies (API not available)')
-      // Fallback to default movies
-      setMovies(defaultMovies)
-      localStorage.setItem('movies', JSON.stringify(defaultMovies))
+      // Get list of deleted movie IDs
+      const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
+      // Filter out deleted movies from default
+      const filteredMovies = defaultMovies.filter(m => !deletedIds.includes(m.id))
+      setMovies(filteredMovies)
+      localStorage.setItem('movies', JSON.stringify(filteredMovies))
     } finally {
       setLoading(false)
     }

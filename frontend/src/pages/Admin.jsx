@@ -49,6 +49,9 @@ function Admin() {
 
   const loadMovies = async () => {
     try {
+      // Get list of deleted movie IDs
+      const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
+      
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
       const response = await fetch(`${apiUrl}/api/movies`)
       
@@ -67,15 +70,22 @@ function Admin() {
           }
         })
         
-        setMovies(allMovies)
-        localStorage.setItem('movies', JSON.stringify(allMovies))
+        // Filter out deleted movies
+        const filteredMovies = allMovies.filter(m => !deletedIds.includes(m.id) && !deletedIds.includes(m._id))
+        
+        setMovies(filteredMovies)
+        localStorage.setItem('movies', JSON.stringify(filteredMovies))
       } else {
         throw new Error('API not available')
       }
     } catch (error) {
       console.log('⚠️ Admin using default movies (API not available)')
-      setMovies(defaultMovies)
-      localStorage.setItem('movies', JSON.stringify(defaultMovies))
+      // Get list of deleted movie IDs
+      const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
+      // Filter out deleted movies from default
+      const filteredMovies = defaultMovies.filter(m => !deletedIds.includes(m.id))
+      setMovies(filteredMovies)
+      localStorage.setItem('movies', JSON.stringify(filteredMovies))
     }
   }
 
@@ -186,7 +196,7 @@ function Admin() {
       const token = localStorage.getItem('token')
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
       
-      // Try to delete from API
+      // Try to delete from API (for database movies)
       const response = await fetch(`${apiUrl}/api/movies/${id}`, {
         method: 'DELETE',
         headers: {
@@ -197,13 +207,21 @@ function Admin() {
       if (response.ok) {
         console.log('✅ Movie deleted from database')
       } else {
-        console.log('⚠️ API delete failed, removing from local only')
+        console.log('⚠️ API delete failed, marking as deleted locally')
       }
     } catch (error) {
-      console.log('⚠️ API not available, removing from local only')
+      console.log('⚠️ API not available, marking as deleted locally')
     }
 
-    // Update local state regardless
+    // Track deleted movie IDs (for static movies that can't be deleted from source)
+    const deletedIds = JSON.parse(localStorage.getItem('deletedMovies') || '[]')
+    const movieToDelete = movies.find(m => m.id === id || m._id === id)
+    if (movieToDelete) {
+      deletedIds.push(movieToDelete.id || movieToDelete._id)
+      localStorage.setItem('deletedMovies', JSON.stringify(deletedIds))
+    }
+
+    // Update local state
     const updatedMovies = movies.filter(m => m.id !== id && m._id !== id)
     setMovies(updatedMovies)
     localStorage.setItem('movies', JSON.stringify(updatedMovies))
