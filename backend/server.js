@@ -12,6 +12,8 @@ import paymentRoutes from './routes/payment.js'
 import phoneAuthRoutes from './routes/phoneAuth.js'
 import hiddenMoviesRoutes from './routes/hiddenMovies.js'
 import debugRoutes from './routes/debug.js'
+import { rateLimiter, authRateLimiter } from './middleware/rateLimiter.js'
+import { securityHeaders } from './middleware/security.js'
 import User from './models/User.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -21,13 +23,19 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 5000
 
+// Security headers
+app.use(securityHeaders)
+
+// Rate limiting
+app.use(rateLimiter())
+
 // Middleware
 app.use(cors({
   origin: process.env.FRONTEND_URL || '*', // Allow all origins in development
   credentials: true
 }))
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ limit: '10mb' }))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
 // Serve uploaded videos and static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
@@ -86,8 +94,8 @@ app.get('/', (req, res) => {
   })
 })
 
-// Routes
-app.use('/api/auth', authRoutes)
+// Routes (with stricter rate limiting for auth)
+app.use('/api/auth', authRateLimiter, authRoutes)
 app.use('/api/movies', movieRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/users', userRoutes)

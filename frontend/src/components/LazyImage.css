@@ -1,0 +1,25 @@
+.lazy-image {
+  transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out;
+}
+
+.lazy-image.loading {
+  opacity: 0.6;
+  filter: blur(5px);
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+  filter: blur(0);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
