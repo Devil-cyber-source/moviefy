@@ -15,7 +15,8 @@ const movieSchema = new mongoose.Schema({
     quality: String, // 360p, 480p, 720p, 1080p
     url: String
   }],
-  status: { type: String, enum: ['processing', 'ready', 'failed'], default: 'processing' }
+  status: { type: String, enum: ['processing', 'ready', 'failed'], default: 'processing' },
+  cloudinaryId: { type: String } // For Cloudinary video storage
 }, { timestamps: true });
 
 export default mongoose.model('Movie', movieSchema);

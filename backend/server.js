@@ -12,6 +12,7 @@ import paymentRoutes from './routes/payment.js'
 import phoneAuthRoutes from './routes/phoneAuth.js'
 import hiddenMoviesRoutes from './routes/hiddenMovies.js'
 import debugRoutes from './routes/debug.js'
+import cloudinaryUploadRoutes from './routes/cloudinaryUpload.js'
 import { rateLimiter, authRateLimiter } from './middleware/rateLimiter.js'
 import { securityHeaders } from './middleware/security.js'
 import User from './models/User.js'
@@ -98,6 +99,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRateLimiter, authRoutes)
 app.use('/api/movies', movieRoutes)
 app.use('/api/upload', uploadRoutes)
+app.use('/api/cloudinary', cloudinaryUploadRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/payment', paymentRoutes)
 app.use('/api/phone', phoneAuthRoutes)
