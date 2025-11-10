@@ -1,0 +1,149 @@
+.swipeable-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.swipeable-card {
+  background: #1a1a1a;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.swipe-movie-poster {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+}
+
+.swipe-movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swipe-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  padding: 30px 20px 20px;
+  color: white;
+}
+
+.swipe-overlay h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.swipe-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 14px;
+  color: #b3b3b3;
+}
+
+.swipe-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 20px;
+}
+
+.swipe-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.swipe-skip {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.swipe-skip:hover:not(:disabled) {
+  background: #3a3a3a;
+}
+
+.swipe-add {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.swipe-add:hover {
+  background: #3a3a3a;
+}
+
+.swipe-watch {
+  background: #e50914;
+  color: #fff;
+  grid-column: span 2;
+}
+
+.swipe-watch:hover {
+  background: #f40612;
+}
+
+.swipe-next {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.swipe-next:hover:not(:disabled) {
+  background: #3a3a3a;
+}
+
+.swipe-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.swipe-counter {
+  text-align: center;
+  padding: 15px;
+  color: #b3b3b3;
+  font-size: 14px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.swipe-hint {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+  font-size: 14px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@media (max-width: 768px) {
+  .swipeable-container {
+    padding: 10px;
+  }
+  
+  .swipe-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .swipe-skip,
+  .swipe-next {
+    grid-column: span 1;
+  }
+  
+  .swipe-watch {
+    grid-column: span 2;
+  }
+}
