@@ -692,13 +692,13 @@ function Admin() {
               disabled={uploading}
             />
 
-            {uploadMode === 'url' ? (
+            {(uploadMode === 'url' || editingMovie) ? (
               <input
                 type="url"
-                placeholder="Video URL"
-                value={formData.videoUrl}
+                placeholder="Video URL (e.g., /uploads/videos/filename.mp4)"
+                value={formData.videoUrl || ''}
                 onChange={(e) => setFormData({...formData, videoUrl: e.target.value})}
-                required
+                required={uploadMode === 'url' && !editingMovie}
                 disabled={uploading}
               />
             ) : (
