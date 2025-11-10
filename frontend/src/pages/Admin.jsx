@@ -323,6 +323,35 @@ function Admin() {
     setSelectedMovies([])
   }
 
+  const handleUnhideAll = async () => {
+    if (!confirm('Unhide all movies? This will restore all deleted movies.')) {
+      return
+    }
+
+    try {
+      const token = localStorage.getItem('token')
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      
+      const response = await fetch(`${apiUrl}/api/debug/hidden-movies/clear`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      const data = await response.json()
+      
+      if (response.ok) {
+        alert(`✅ ${data.message}`)
+        loadMovies() // Reload movies
+      } else {
+        alert(`⚠️ Failed: ${data.error}`)
+      }
+    } catch (error) {
+      alert(`⚠️ Error: ${error.message}`)
+    }
+  }
+
   const resetForm = () => {
     setFormData({
       title: '',
@@ -535,6 +564,13 @@ function Admin() {
                       className="btn-secondary"
                     >
                       🗑️ Multi Delete
+                    </button>
+                    <button 
+                      onClick={handleUnhideAll} 
+                      className="btn-warning"
+                      style={{background: '#ff9800', marginLeft: '10px'}}
+                    >
+                      🔄 Unhide All
                     </button>
                     <button 
                       onClick={() => setShowAddForm(!showAddForm)} 
