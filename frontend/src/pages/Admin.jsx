@@ -47,11 +47,36 @@ function Admin() {
     loadCategories()
   }, [currentUser, navigate])
 
-  const loadMovies = () => {
-    // Load from file first (includes all 50+ public domain movies)
-    console.log('Admin loading movies:', defaultMovies.length, 'movies')
-    setMovies(defaultMovies)
-    localStorage.setItem('movies', JSON.stringify(defaultMovies))
+  const loadMovies = async () => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      const response = await fetch(`${apiUrl}/api/movies`)
+      
+      if (response.ok) {
+        const apiMovies = await response.json()
+        console.log('✅ Admin loaded movies from API:', apiMovies.length)
+        
+        // Merge API movies with default movies
+        const allMovies = [...defaultMovies]
+        apiMovies.forEach(apiMovie => {
+          if (!allMovies.find(m => m.id === apiMovie.id || m._id === apiMovie._id)) {
+            allMovies.push({
+              ...apiMovie,
+              id: apiMovie._id || apiMovie.id
+            })
+          }
+        })
+        
+        setMovies(allMovies)
+        localStorage.setItem('movies', JSON.stringify(allMovies))
+      } else {
+        throw new Error('API not available')
+      }
+    } catch (error) {
+      console.log('⚠️ Admin using default movies (API not available)')
+      setMovies(defaultMovies)
+      localStorage.setItem('movies', JSON.stringify(defaultMovies))
+    }
   }
 
   const loadUsers = () => {
@@ -152,12 +177,36 @@ function Admin() {
     setShowAddForm(true)
   }
 
-  const handleDelete = (id) => {
-    if (confirm('Are you sure you want to delete this movie?')) {
-      const updatedMovies = movies.filter(m => m.id !== id)
-      setMovies(updatedMovies)
-      localStorage.setItem('movies', JSON.stringify(updatedMovies))
+  const handleDelete = async (id) => {
+    if (!confirm('Are you sure you want to delete this movie?')) {
+      return
     }
+
+    try {
+      const token = localStorage.getItem('token')
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      
+      // Try to delete from API
+      const response = await fetch(`${apiUrl}/api/movies/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        console.log('✅ Movie deleted from database')
+      } else {
+        console.log('⚠️ API delete failed, removing from local only')
+      }
+    } catch (error) {
+      console.log('⚠️ API not available, removing from local only')
+    }
+
+    // Update local state regardless
+    const updatedMovies = movies.filter(m => m.id !== id && m._id !== id)
+    setMovies(updatedMovies)
+    localStorage.setItem('movies', JSON.stringify(updatedMovies))
   }
 
   const toggleSelectMovie = (id) => {

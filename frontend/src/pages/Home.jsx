@@ -8,6 +8,7 @@ import ContinueWatching from '../components/ContinueWatching'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { useAuth } from '../context/AuthContext'
 import { movies as defaultMovies } from '../data/movies'
+import { API_ENDPOINTS } from '../config/api'
 import '../App.css'
 
 function Home() {
@@ -28,26 +29,39 @@ function Home() {
     loadMovies()
   }, [currentUser, navigate])
 
-  const loadMovies = () => {
+  const loadMovies = async () => {
     setLoading(true)
-    // Force clear cache and load fresh movies
-    localStorage.removeItem('movies')
-    console.log('Loading movies:', defaultMovies.length, 'movies')
-    setMovies(defaultMovies)
-    localStorage.setItem('movies', JSON.stringify(defaultMovies))
-    setTimeout(() => setLoading(false), 500)
-    
-    // Then merge with any admin-added movies
-    const savedMovies = localStorage.getItem('movies')
-    if (savedMovies) {
-      const saved = JSON.parse(savedMovies)
-      // Keep admin-added movies (id > 1000)
-      const adminMovies = saved.filter(m => m.id > 1000)
-      if (adminMovies.length > 0) {
-        const combined = [...defaultMovies, ...adminMovies]
-        setMovies(combined)
-        localStorage.setItem('movies', JSON.stringify(combined))
+    try {
+      // Try to fetch from API first
+      const response = await fetch(API_ENDPOINTS.MOVIES)
+      if (response.ok) {
+        const apiMovies = await response.json()
+        console.log('✅ Loaded movies from API:', apiMovies.length)
+        
+        // Merge API movies with default movies (avoid duplicates)
+        const allMovies = [...defaultMovies]
+        apiMovies.forEach(apiMovie => {
+          // Only add if not already in default movies
+          if (!allMovies.find(m => m.id === apiMovie.id || m._id === apiMovie._id)) {
+            allMovies.push({
+              ...apiMovie,
+              id: apiMovie._id || apiMovie.id
+            })
+          }
+        })
+        
+        setMovies(allMovies)
+        localStorage.setItem('movies', JSON.stringify(allMovies))
+      } else {
+        throw new Error('API not available')
       }
+    } catch (error) {
+      console.log('⚠️ Using default movies (API not available)')
+      // Fallback to default movies
+      setMovies(defaultMovies)
+      localStorage.setItem('movies', JSON.stringify(defaultMovies))
+    } finally {
+      setLoading(false)
     }
   }
 
