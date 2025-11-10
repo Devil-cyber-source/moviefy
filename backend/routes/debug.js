@@ -35,11 +35,12 @@ router.delete('/hidden-movies/clear', authMiddleware, adminMiddleware, async (re
   }
 });
 
-// Debug endpoint to see database stats
-router.get('/stats', authMiddleware, adminMiddleware, async (req, res) => {
+// Debug endpoint to see database stats (public for testing)
+router.get('/stats', async (req, res) => {
   try {
     const movieCount = await Movie.countDocuments();
     const hiddenCount = await HiddenMovie.countDocuments();
+    const hiddenMovies = await HiddenMovie.find().select('movieId deletedAt');
     
     res.json({
       success: true,
@@ -47,7 +48,9 @@ router.get('/stats', authMiddleware, adminMiddleware, async (req, res) => {
         totalMovies: movieCount,
         hiddenMovies: hiddenCount,
         visibleMovies: movieCount - hiddenCount
-      }
+      },
+      hiddenMovieIds: hiddenMovies.map(h => h.movieId),
+      hiddenMoviesDetails: hiddenMovies
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
