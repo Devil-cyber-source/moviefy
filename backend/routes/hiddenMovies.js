@@ -68,13 +68,37 @@ router.post('/bulk/hide', authMiddleware, adminMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'movieIds array is required' });
     }
     
-    console.log('🗑️ Bulk hiding movies:', movieIds.length);
+    console.log('🗑️ Bulk hiding movies:', movieIds.length, movieIds);
     
-    // Try to delete from database
-    const dbDeleteResult = await Movie.deleteMany({ _id: { $in: movieIds } });
-    console.log('✅ Deleted from database:', dbDeleteResult.deletedCount);
+    // Separate ObjectIds from numeric IDs
+    const objectIds = [];
+    const numericIds = [];
     
-    // Add all to hidden movies list
+    for (const id of movieIds) {
+      const idStr = String(id);
+      // Check if it's a valid MongoDB ObjectId (24 hex characters)
+      if (/^[0-9a-fA-F]{24}$/.test(idStr)) {
+        objectIds.push(idStr);
+      } else {
+        numericIds.push(idStr);
+      }
+    }
+    
+    console.log('📊 ObjectIds:', objectIds.length, 'Numeric IDs:', numericIds.length);
+    
+    // Try to delete from database (only ObjectIds)
+    let dbDeleteCount = 0;
+    if (objectIds.length > 0) {
+      try {
+        const dbDeleteResult = await Movie.deleteMany({ _id: { $in: objectIds } });
+        dbDeleteCount = dbDeleteResult.deletedCount;
+        console.log('✅ Deleted from database:', dbDeleteCount);
+      } catch (err) {
+        console.log('⚠️ Database delete error:', err.message);
+      }
+    }
+    
+    // Add all to hidden movies list (both ObjectIds and numeric IDs)
     const hiddenMovies = [];
     for (const movieId of movieIds) {
       const hiddenMovie = await HiddenMovie.findOneAndUpdate(
@@ -95,6 +119,8 @@ router.post('/bulk/hide', authMiddleware, adminMiddleware, async (req, res) => {
       success: true,
       message: `${movieIds.length} movies hidden successfully`,
       count: movieIds.length,
+      databaseDeleted: dbDeleteCount,
+      staticHidden: numericIds.length,
       hiddenMovies 
     });
   } catch (error) {
