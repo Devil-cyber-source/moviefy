@@ -210,9 +210,14 @@ function Admin() {
       return
     }
 
+    console.log('🗑️ Attempting to delete movie ID:', id)
+
     try {
       const token = localStorage.getItem('token')
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      
+      console.log('📡 Calling API:', `${apiUrl}/api/hidden-movies/${id}`)
+      console.log('🔑 Token:', token ? 'Present' : 'Missing')
       
       // Hide movie in database (works for both static and database movies)
       const response = await fetch(`${apiUrl}/api/hidden-movies/${id}`, {
@@ -223,17 +228,21 @@ function Admin() {
         }
       })
 
+      console.log('📥 Response status:', response.status)
+      const responseData = await response.json()
+      console.log('📥 Response data:', responseData)
+
       if (response.ok) {
         console.log('✅ Movie hidden in database for all users')
-        alert('✅ Movie deleted successfully! It will be hidden for all users.')
+        alert('✅ Movie deleted successfully! Refresh to see changes.')
       } else {
-        console.log('⚠️ API hide failed')
-        alert('⚠️ Failed to delete movie. Please try again.')
+        console.error('❌ API hide failed:', responseData)
+        alert(`⚠️ Failed to delete movie: ${responseData.error || 'Unknown error'}`)
         return
       }
     } catch (error) {
-      console.log('⚠️ API not available:', error)
-      alert('⚠️ Cannot connect to server. Please check your connection.')
+      console.error('❌ API error:', error)
+      alert(`⚠️ Cannot connect to server: ${error.message}`)
       return
     }
 
