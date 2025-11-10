@@ -58,10 +58,12 @@ function Admin() {
         if (hiddenResponse.ok) {
           const hiddenData = await hiddenResponse.json()
           hiddenIds = hiddenData.hiddenIds || []
-          console.log('✅ Admin loaded hidden movies:', hiddenIds.length)
+          console.log('✅ Admin loaded hidden movies:', hiddenIds.length, hiddenIds)
+        } else {
+          console.log('⚠️ Hidden movies API returned:', hiddenResponse.status)
         }
       } catch (err) {
-        console.log('⚠️ Could not load hidden movies')
+        console.log('⚠️ Could not load hidden movies:', err.message)
       }
       
       const response = await fetch(`${apiUrl}/api/movies`)
@@ -84,8 +86,14 @@ function Admin() {
         // Filter out hidden movies
         const filteredMovies = allMovies.filter(m => {
           const movieId = String(m._id || m.id)
-          return !hiddenIds.includes(movieId)
+          const isHidden = hiddenIds.includes(movieId)
+          if (isHidden) {
+            console.log('🚫 Filtering out hidden movie:', movieId, m.title)
+          }
+          return !isHidden
         })
+        
+        console.log('📊 Total movies:', allMovies.length, '| Hidden:', hiddenIds.length, '| Showing:', filteredMovies.length)
         
         setMovies(filteredMovies)
         localStorage.setItem('movies', JSON.stringify(filteredMovies))
