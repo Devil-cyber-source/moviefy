@@ -171,13 +171,28 @@ function Admin() {
       const token = localStorage.getItem('token')
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
       
-      // Delete each movie individually
+      // Separate database movies from static movies
+      const dbMovies = movies.filter(m => {
+        const id = m._id || m.id
+        return selectedMovies.includes(id) && m._id // Only database movies have _id
+      })
+      
+      const staticMovies = movies.filter(m => {
+        const id = m._id || m.id
+        return selectedMovies.includes(id) && !m._id // Static movies don't have _id
+      })
+      
+      console.log('📊 DB movies to delete:', dbMovies.length)
+      console.log('📊 Static movies to remove:', staticMovies.length)
+      
+      // Delete database movies
       let successCount = 0
       let failCount = 0
       
-      for (const movieId of selectedMovies) {
+      for (const movie of dbMovies) {
         try {
-          const response = await fetch(`${apiUrl}/api/movies/${movieId}`, {
+          console.log('🗑️ Deleting movie:', movie._id, movie.title)
+          const response = await fetch(`${apiUrl}/api/movies/${movie._id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -186,13 +201,28 @@ function Admin() {
           })
           
           if (response.ok) {
+            console.log('✅ Deleted:', movie.title)
             successCount++
           } else {
+            const error = await response.json()
+            console.error('❌ Failed to delete:', movie.title, error)
             failCount++
           }
         } catch (err) {
+          console.error('❌ Error deleting:', movie.title, err)
           failCount++
         }
+      }
+
+      // Remove static movies from local state only
+      if (staticMovies.length > 0) {
+        const updatedMovies = movies.filter(m => {
+          const id = m._id || m.id
+          return !selectedMovies.includes(id) || m._id // Keep DB movies (will reload), remove static
+        })
+        setMovies(updatedMovies)
+        localStorage.setItem('movies', JSON.stringify(updatedMovies))
+        successCount += staticMovies.length
       }
 
       if (successCount > 0) {
