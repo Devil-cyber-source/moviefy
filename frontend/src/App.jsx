@@ -9,8 +9,6 @@ import Signup from './pages/Signup'
 import Admin from './pages/Admin'
 import Profile from './pages/Profile'
 import ChangePassword from './pages/ChangePassword'
-import Subscription from './pages/Subscription'
-import Checkout from './pages/Checkout'
 import WatchParty from './pages/WatchParty'
 import './App.css'
 
@@ -47,20 +45,7 @@ function App() {
           currentUser ? <ChangePassword /> : <Navigate to="/login" />
         } 
       />
-      <Route 
-        path="/subscription" 
-        element={
-          currentUser?.role === 'admin' ? <Navigate to="/admin" /> : 
-          currentUser ? <Subscription /> : <Navigate to="/login" />
-        } 
-      />
-      <Route 
-        path="/checkout" 
-        element={
-          currentUser?.role === 'admin' ? <Navigate to="/admin" /> : 
-          currentUser ? <Checkout /> : <Navigate to="/login" />
-        } 
-      />
+
       <Route 
         path="/watch-party" 
         element={

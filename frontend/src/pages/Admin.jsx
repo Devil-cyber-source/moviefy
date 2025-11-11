@@ -568,12 +568,6 @@ function Admin() {
                     >
                       🔄 Unhide All
                     </button>
-                    <button 
-                      onClick={() => setShowAddForm(!showAddForm)} 
-                      className="btn-primary"
-                    >
-                      {showAddForm ? 'Cancel' : '+ Add New Movie'}
-                    </button>
                   </>
                 ) : (
                   <>
@@ -598,28 +592,9 @@ function Admin() {
               </div>
             </div>
 
-        {showAddForm && (
+        {editingMovie && (
           <form className="movie-form" onSubmit={handleSubmit}>
-            <h3>{editingMovie ? 'Edit Movie' : 'Add New Movie'}</h3>
-            
-            {!editingMovie && (
-              <div className="upload-mode-toggle">
-                <button
-                  type="button"
-                  className={`mode-btn ${uploadMode === 'url' ? 'active' : ''}`}
-                  onClick={() => setUploadMode('url')}
-                >
-                  🔗 Add with URL
-                </button>
-                <button
-                  type="button"
-                  className={`mode-btn ${uploadMode === 'file' ? 'active' : ''}`}
-                  onClick={() => setUploadMode('file')}
-                >
-                  📤 Upload Video File
-                </button>
-              </div>
-            )}
+            <h3>Edit Movie</h3>
 
             <div className="form-grid">
               <input

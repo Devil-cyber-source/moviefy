@@ -8,7 +8,6 @@ import authRoutes from './routes/auth.js'
 import movieRoutes from './routes/movies.js'
 import uploadRoutes from './routes/upload.js'
 import userRoutes from './routes/users.js'
-import paymentRoutes from './routes/payment.js'
 import phoneAuthRoutes from './routes/phoneAuth.js'
 import hiddenMoviesRoutes from './routes/hiddenMovies.js'
 import debugRoutes from './routes/debug.js'
@@ -101,7 +100,6 @@ app.use('/api/movies', movieRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/cloudinary', cloudinaryUploadRoutes)
 app.use('/api/users', userRoutes)
-app.use('/api/payment', paymentRoutes)
 app.use('/api/phone', phoneAuthRoutes)
 app.use('/api/hidden-movies', hiddenMoviesRoutes)
 app.use('/api/debug', debugRoutes)
