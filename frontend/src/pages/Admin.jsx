@@ -438,6 +438,12 @@ function Admin() {
           >
             📁 Categories
           </button>
+          <button 
+            className={`tab ${activeTab === 'upload' ? 'active' : ''}`}
+            onClick={() => setActiveTab('upload')}
+          >
+            📤 Upload
+          </button>
 
         </div>
 
