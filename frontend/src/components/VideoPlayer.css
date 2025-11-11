@@ -90,3 +90,54 @@
 .btn-toggle-rating:hover {
   background: #3a3a3a;
 }
+
+.video-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(229, 9, 20, 0.9);
+  padding: 20px 30px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 5;
+  max-width: 80%;
+}
+
+.video-error p {
+  color: white;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.video-error p:first-child {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .video-player-overlay {
+    padding: 10px;
+  }
+
+  .video-player-container {
+    margin-top: 20px;
+  }
+
+  .video-info {
+    padding: 20px;
+  }
+
+  .video-info h2 {
+    font-size: 22px;
+  }
+
+  .video-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btn-toggle-rating {
+    width: 100%;
+  }
+}

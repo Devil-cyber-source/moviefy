@@ -7,6 +7,17 @@ function VideoPlayer({ movie, onClose }) {
   const { currentUser } = useAuth()
   const videoRef = useRef(null)
   const [showRating, setShowRating] = useState(false)
+  const [error, setError] = useState(null)
+
+  // Debug logging
+  console.log('VideoPlayer - Movie:', movie)
+  console.log('VideoPlayer - Video URL:', movie?.videoUrl)
+
+  // Check if movie exists
+  if (!movie) {
+    console.error('VideoPlayer - No movie provided')
+    return null
+  }
 
   // Check if video is YouTube, Vimeo, or uploaded file
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
@@ -96,19 +107,31 @@ function VideoPlayer({ movie, onClose }) {
             allowFullScreen
           ></iframe>
         ) : (
-          <video 
-            ref={videoRef}
-            controls 
-            autoPlay
-            className="video-player"
-            poster={movie.backdrop}
-          >
-            <source 
-              src={isUploaded ? `${API_URL}${movie.videoUrl}` : movie.videoUrl} 
-              type="video/mp4" 
-            />
-            Your browser does not support the video tag.
-          </video>
+          <>
+            <video 
+              ref={videoRef}
+              controls 
+              autoPlay
+              className="video-player"
+              poster={movie.backdrop}
+              onError={(e) => {
+                console.error('Video error:', e)
+                setError('Failed to load video. Please check the video URL.')
+              }}
+            >
+              <source 
+                src={isUploaded ? `${API_URL}${movie.videoUrl}` : movie.videoUrl} 
+                type="video/mp4" 
+              />
+              Your browser does not support the video tag.
+            </video>
+            {error && (
+              <div className="video-error">
+                <p>{error}</p>
+                <p>Video URL: {isUploaded ? `${API_URL}${movie.videoUrl}` : movie.videoUrl}</p>
+              </div>
+            )}
+          </>
         )}
         <div className="video-info">
           <div className="video-header">
