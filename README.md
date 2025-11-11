@@ -1,66 +1,80 @@
-# 🎬 Moviefy - Netflix Clone
+# 🎬 MOVIEFY - Streaming Platform
 
-A modern, feature-rich streaming platform built with React, Node.js, and MongoDB.
+A modern, full-stack streaming platform built with React, Node.js, Express, and MongoDB.
+
+---
+
+## ✨ Features
+
+- 🎬 **Upload & Stream Movies** - Upload videos and stream them
+- 👥 **User Management** - Admin and user roles
+- 🔐 **Authentication** - Secure login/signup
+- 📊 **Admin Dashboard** - Manage movies, users, analytics
+- 🎨 **Modern UI** - Netflix-style dark theme
+- 📱 **Responsive** - Works on all devices
+- 🗑️ **Movie Management** - Edit, delete movies
+- 📈 **Analytics** - View platform statistics
+
+---
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
-```bash
-# Frontend
-cd frontend && npm install
+### Prerequisites
+- Node.js (v16+)
+- MongoDB
+- Git
 
-# Backend
-cd backend && npm install
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/your-username/moviefy.git
+cd moviefy
 ```
 
-### 2. Run Development Servers
+2. **Install dependencies**
 ```bash
-# Terminal 1 - Backend
+# Backend
 cd backend
+npm install
+
+# Frontend
+cd ../frontend
+npm install
+```
+
+3. **Set up environment variables**
+
+**Backend** (`backend/.env`):
+```env
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+PORT=5000
+FRONTEND_URL=http://localhost:5173
+```
+
+**Frontend** (`frontend/.env`):
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+4. **Run the application**
+
+```bash
+# Backend (in backend folder)
 npm start
 
-# Terminal 2 - Frontend
-cd frontend
+# Frontend (in frontend folder)
 npm run dev
 ```
 
-### 3. Access the App
-- **Frontend:** http://localhost:5173
-- **Backend:** http://localhost:5000
-- **Network:** http://172.16.2.39:5173 (from any device on same WiFi)
+5. **Access the app**
+- Frontend: http://localhost:5173
+- Backend: http://localhost:5000
 
 ---
 
-## 🎯 Features
-
-### User Features
-- ✅ Multiple login methods (Email, Phone OTP, Google)
-- ✅ Browse and search movies
-- ✅ Video streaming
-- ✅ My List / Watchlist
-- ✅ Continue watching
-- ✅ Subscription plans
-- ✅ Referral system
-- ✅ Watch party
-
-### Admin Features
-- ✅ Add/Edit/Delete movies
-- ✅ User management
-- ✅ Analytics dashboard
-- ✅ Video upload
-- ✅ Subscription management
-
-### Technical Features
-- ✅ Lazy loading images
-- ✅ Mobile responsive
-- ✅ Error boundaries
-- ✅ Performance optimized
-- ✅ Real-time database
-- ✅ JWT authentication
-
----
-
-## 🔐 Demo Accounts
+## 👤 Default Accounts
 
 **Admin:**
 - Email: `admin@moviefy.com`
@@ -70,54 +84,100 @@ npm run dev
 - Email: `user@moviefy.com`
 - Password: `user123`
 
-**Google Login:**
-- Click "Continue with Google" (instant demo mode)
+---
 
-**Phone Login:**
-- Enter any phone number
-- OTP: `123456`
+## 📦 Deployment
+
+### Deploy to Railway
+
+**Backend:**
+1. Go to [Railway.app](https://railway.app)
+2. New Project → Deploy from GitHub
+3. Select your repo
+4. Set root directory to `backend`
+5. Add environment variables (see BACKEND_RAILWAY_DEPLOY.md)
+
+**Frontend:**
+1. New Project → Deploy from GitHub
+2. Select your repo
+3. Set root directory to `frontend`
+4. Add `VITE_API_URL` with your backend URL
+
+See `DEPLOYMENT_GUIDE.md` for detailed instructions.
 
 ---
 
-## 🛠️ Tech Stack
+## 📚 Documentation
+
+- **DEPLOYMENT_GUIDE.md** - Complete deployment instructions
+- **BACKEND_RAILWAY_DEPLOY.md** - Backend deployment on Railway
+- **CLOUDINARY_SETUP.md** - Video storage with Cloudinary
+- **VIDEO_STORAGE_COMPARISON.md** - Storage options comparison
+
+---
+
+## 🎯 Usage
+
+### Admin Panel
+
+1. Login as admin
+2. Go to **Upload** tab
+3. Fill in movie details
+4. Select video file
+5. Click Upload
+
+### Managing Movies
+
+- **Edit**: Click Edit button on any movie
+- **Delete**: Click Delete button (permanent)
+- **Multi Delete**: Use Multi Delete mode
+
+### User Side
+
+- Browse movies
+- Click to play
+- Continue watching from where you left off
+
+---
+
+## 🗑️ Clear Database
+
+To start fresh and delete all movies:
+
+```bash
+cd backend
+node scripts/clearMovies.js
+```
+
+Or via MongoDB shell:
+```bash
+mongosh
+use moviefy
+db.movies.deleteMany({})
+```
+
+---
+
+## 🎨 Tech Stack
 
 **Frontend:**
-- React 18 + Vite
+- React 18
 - React Router
+- Vite
 - CSS3
 
 **Backend:**
-- Node.js + Express
-- MongoDB + Mongoose
+- Node.js
+- Express
+- MongoDB
+- Mongoose
 - JWT Authentication
+- Multer (file uploads)
 
-**Features:**
-- Google OAuth
-- Razorpay Payment
-- Video Streaming
-- Real-time Updates
-
----
-
-## 📱 Access from Anywhere
-
-### Local Network (Same WiFi)
-```
-http://172.16.2.39:5173
-```
-Access from phone, tablet, or any device on same WiFi!
-
-### Internet Access (Ngrok)
-```bash
-ngrok http 5173
-```
-Share the HTTPS URL with anyone!
-
-### Permanent Deployment
-See `COMPLETE_GUIDE.md` for deploying to:
-- Render (Free)
-- Vercel (Free)
-- Railway (Free)
+**Deployment:**
+- Railway (hosting)
+- MongoDB Atlas (database)
+- Cloudinary (optional video storage)
 
 ---
 
@@ -125,167 +185,105 @@ See `COMPLETE_GUIDE.md` for deploying to:
 
 ```
 moviefy/
-├── frontend/          # React app
+├── backend/
+│   ├── models/          # MongoDB models
+│   ├── routes/          # API routes
+│   ├── middleware/      # Auth, rate limiting
+│   ├── config/          # Database config
+│   ├── uploads/         # Uploaded videos
+│   └── server.js        # Entry point
+├── frontend/
 │   ├── src/
-│   │   ├── components/  # Reusable components
+│   │   ├── components/  # React components
 │   │   ├── pages/       # Page components
 │   │   ├── context/     # React context
-│   │   ├── services/    # API services
-│   │   └── data/        # Static data
-│   └── package.json
-│
-├── backend/           # Node.js API
-│   ├── routes/        # API routes
-│   ├── models/        # MongoDB models
-│   ├── config/        # Configuration
-│   └── package.json
-│
-├── COMPLETE_GUIDE.md  # Full documentation
-└── README.md          # This file
+│   │   ├── utils/       # Utilities
+│   │   └── styles/      # CSS files
+│   └── public/          # Static files
+└── README.md
 ```
 
 ---
 
-## 🔧 Environment Variables
+## 🔧 Configuration
 
-**Backend (.env):**
-```env
-MONGODB_URI=your_mongodb_uri
-JWT_SECRET=your_secret_key
-FRONTEND_URL=http://localhost:5173
-PORT=5000
-```
+### Video Storage
 
-**Frontend (.env):**
-```env
-VITE_API_URL=http://localhost:5000
-VITE_GOOGLE_CLIENT_ID=optional
-```
+**Local Storage (Default):**
+- Videos stored in `backend/uploads/videos/`
+- Good for development
+- Limited by server storage
 
----
+**Cloudinary (Recommended for Production):**
+- Unlimited storage
+- CDN delivery
+- See `CLOUDINARY_SETUP.md`
 
-## 📦 Available Scripts
+### Environment Variables
 
-**Frontend:**
-```bash
-npm run dev      # Development server
-npm run build    # Production build
-npm run preview  # Preview build
-```
+**Required:**
+- `MONGODB_URI` - MongoDB connection string
+- `JWT_SECRET` - Secret key for JWT tokens
 
-**Backend:**
-```bash
-npm start        # Start server
-npm run dev      # Development mode
-```
+**Optional:**
+- `CLOUDINARY_CLOUD_NAME` - Cloudinary cloud name
+- `CLOUDINARY_API_KEY` - Cloudinary API key
+- `CLOUDINARY_API_SECRET` - Cloudinary API secret
 
 ---
 
-## 🎨 Key Features Explained
+## 🐛 Troubleshooting
 
-### Authentication
-- Email/Password with validation
-- Phone OTP (demo mode)
-- Google OAuth (instant demo)
-- JWT sessions
-- Password change
+### Movies not showing
+- Check if backend is running
+- Verify MongoDB connection
+- Check browser console for errors
 
-### Video Management
-- Upload custom videos
-- YouTube/Vimeo integration
-- Continue watching
-- Watch history
-- My List
+### Upload fails
+- Check file size (max 5GB)
+- Verify backend is running
+- Check supported formats: MP4, MKV, AVI, MOV, WebM
 
-### Subscriptions
-- Multiple plans (Basic, Standard, Premium)
-- Razorpay integration
-- Trial periods
-- Auto-renewal
-- Referral rewards
-
-### Admin Panel
-- User analytics
-- Movie management
-- Upload videos
-- Pricing control
-- Database viewer
-
----
-
-## 🚀 Deployment
-
-### Quick Deploy (20 minutes)
-
-1. **MongoDB Atlas** (Database)
-   - Create free cluster
-   - Get connection string
-
-2. **Render** (Backend)
-   - Deploy from GitHub
-   - Add environment variables
-
-3. **Vercel** (Frontend)
-   - Deploy from GitHub
-   - Add API URL
-
-**See `COMPLETE_GUIDE.md` for detailed steps!**
-
----
-
-## 🔒 Security
-
-- ✅ JWT authentication
-- ✅ Password hashing (bcrypt)
-- ✅ CORS protection
-- ✅ Environment variables
-- ✅ Input validation
-- ✅ MongoDB injection prevention
-
----
-
-## 📱 Mobile Support
-
-- ✅ Fully responsive design
-- ✅ Touch-friendly interface
-- ✅ Mobile navigation
-- ✅ Optimized performance
-- ✅ Network access enabled
-
----
-
-## 🆘 Troubleshooting
-
-**Can't access from phone?**
-- Make sure on same WiFi
-- Use: `http://172.16.2.39:5173`
-
-**Google login not working?**
-- It's in demo mode (works instantly)
-- No configuration needed
-
-**Database connection failed?**
-- Check MongoDB URI in `.env`
-- Make sure MongoDB is running
-
-**Port already in use?**
-- Change PORT in backend `.env`
-- Update VITE_API_URL in frontend
-
----
-
-## 📄 License
-
-This project is for educational purposes.
+### Delete not working
+- Make sure you're logged in as admin
+- Check browser console for errors
+- Verify backend connection
 
 ---
 
 ## 🤝 Contributing
 
-Feel free to fork and customize!
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
 ---
 
-**Made with ❤️ using React, Node.js, and MongoDB**
+## 📄 License
 
-**For detailed documentation, see `COMPLETE_GUIDE.md`**
+This project is open source and available under the MIT License.
+
+---
+
+## 🙏 Acknowledgments
+
+- Netflix for design inspiration
+- Public domain movies for testing
+- Open source community
+
+---
+
+## 📞 Support
+
+For issues and questions:
+- Open an issue on GitHub
+- Check documentation files
+- Review troubleshooting section
+
+---
+
+**Built with ❤️ by Your Team**
+
+🎬 Happy Streaming!
