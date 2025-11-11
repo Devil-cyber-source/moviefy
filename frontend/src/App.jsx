@@ -12,6 +12,7 @@ import ChangePassword from './pages/ChangePassword'
 import Subscription from './pages/Subscription'
 import Checkout from './pages/Checkout'
 import WatchParty from './pages/WatchParty'
+import './App.css'
 
 function App() {
   const { currentUser } = useAuth()
