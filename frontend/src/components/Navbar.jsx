@@ -102,9 +102,6 @@ function Navbar({ onSearch, onCategoryChange }) {
                   <div className="profile-item" onClick={() => { navigate('/profile'); setProfileOpen(false); }}>
                     <span>👤</span> {currentUser?.name}
                   </div>
-                  <div className="profile-item" onClick={() => { navigate('/subscription'); setProfileOpen(false); }}>
-                    <span>💳</span> Subscription
-                  </div>
                   <div className="profile-item" onClick={() => { navigate('/watch-party'); setProfileOpen(false); }}>
                     <span>🎉</span> Watch Party
                   </div>

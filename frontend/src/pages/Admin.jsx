@@ -24,7 +24,7 @@ function Admin() {
   const [uploading, setUploading] = useState(false)
   const [uploadMessage, setUploadMessage] = useState('')
   const [videoFile, setVideoFile] = useState(null)
-  const [uploadMode, setUploadMode] = useState('url') // 'url' or 'file'
+  const [uploadMode, setUploadMode] = useState('file') // 'url' or 'file'
   const [formData, setFormData] = useState({
     title: '',
     year: '',
@@ -425,12 +425,7 @@ function Admin() {
           >
             👥 Users
           </button>
-          <button 
-            className={`tab ${activeTab === 'subscriptions' ? 'active' : ''}`}
-            onClick={() => setActiveTab('subscriptions')}
-          >
-            💳 Subscriptions
-          </button>
+
           <button 
             className={`tab ${activeTab === 'analytics' ? 'active' : ''}`}
             onClick={() => setActiveTab('analytics')}
@@ -443,12 +438,7 @@ function Admin() {
           >
             📁 Categories
           </button>
-          <button 
-            className={`tab ${activeTab === 'pricing' ? 'active' : ''}`}
-            onClick={() => setActiveTab('pricing')}
-          >
-            💰 Pricing & Discounts
-          </button>
+
         </div>
 
         {activeTab === 'dashboard' && (
@@ -887,7 +877,8 @@ function Admin() {
           </div>
         )}
 
-        {activeTab === 'subscriptions' && (
+        {activeTab === 'subscriptions' && null}
+        {false && (
           <div className="subscriptions-section">
             <h2>Subscription Management</h2>
             
@@ -1066,9 +1057,7 @@ function Admin() {
           </div>
         )}
 
-        {activeTab === 'pricing' && (
-          <PricingManager />
-        )}
+        {activeTab === 'pricing' && null}
 
         {activeTab === 'upload' && (
           <div className="upload-section">

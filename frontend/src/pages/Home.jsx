@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import Hero from '../components/Hero'
-import MovieRow from '../components/MovieRow'
+import CleanHero from '../components/CleanHero'
+import MovieGrid from '../components/MovieGrid'
 import VideoPlayer from '../components/VideoPlayer'
 import ContinueWatching from '../components/ContinueWatching'
 import LoadingSpinner from '../components/LoadingSpinner'
@@ -120,6 +120,11 @@ function Home() {
     return <LoadingSpinner fullScreen={true} />
   }
 
+  const handleAddToList = (movie) => {
+    // TODO: Implement add to list functionality
+    console.log('Add to list:', movie.title)
+  }
+
   return (
     <div className="app">
       <Navbar 
@@ -128,38 +133,66 @@ function Home() {
       />
       
       {!searchQuery && selectedCategory === 'all' && movies.length > 0 && (
-        <Hero movie={movies[0]} onPlay={setSelectedMovie} />
+        <CleanHero movies={movies} onMovieClick={setSelectedMovie} />
       )}
       
       <div className="content">
         {searchQuery ? (
-          <MovieRow 
+          <MovieGrid 
             title="Search Results" 
             movies={filteredMovies} 
             onMovieClick={setSelectedMovie}
+            onAddToList={handleAddToList}
           />
         ) : selectedCategory === 'mylist' ? (
-          <MovieRow 
+          <MovieGrid 
             title="My List" 
             movies={myListMovies} 
             onMovieClick={setSelectedMovie}
+            onAddToList={handleAddToList}
           />
         ) : selectedCategory !== 'all' ? (
-          <MovieRow 
+          <MovieGrid 
             title={selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} 
             movies={filteredMovies} 
             onMovieClick={setSelectedMovie}
+            onAddToList={handleAddToList}
           />
         ) : (
           <>
             <ContinueWatching onMovieClick={setSelectedMovie} />
             {myListMovies.length > 0 && (
-              <MovieRow title="My List" movies={myListMovies} onMovieClick={setSelectedMovie} />
+              <MovieGrid 
+                title="My List" 
+                movies={myListMovies} 
+                onMovieClick={setSelectedMovie}
+                onAddToList={handleAddToList}
+              />
             )}
-            <MovieRow title="Trending Now" movies={trending} onMovieClick={setSelectedMovie} />
-            <MovieRow title="Action" movies={action} onMovieClick={setSelectedMovie} />
-            <MovieRow title="Drama" movies={drama} onMovieClick={setSelectedMovie} />
-            <MovieRow title="Comedy" movies={comedy} onMovieClick={setSelectedMovie} />
+            <MovieGrid 
+              title="Trending Now" 
+              movies={trending} 
+              onMovieClick={setSelectedMovie}
+              onAddToList={handleAddToList}
+            />
+            <MovieGrid 
+              title="Action" 
+              movies={action} 
+              onMovieClick={setSelectedMovie}
+              onAddToList={handleAddToList}
+            />
+            <MovieGrid 
+              title="Drama" 
+              movies={drama} 
+              onMovieClick={setSelectedMovie}
+              onAddToList={handleAddToList}
+            />
+            <MovieGrid 
+              title="Comedy" 
+              movies={comedy} 
+              onMovieClick={setSelectedMovie}
+              onAddToList={handleAddToList}
+            />
           </>
         )}
       </div>
