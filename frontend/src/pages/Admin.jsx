@@ -101,9 +101,11 @@ function Admin() {
     
     // Only handle editing existing movies
     if (editingMovie) {
-      const updatedMovies = movies.map(m => 
-        m.id === editingMovie.id ? { ...formData, id: editingMovie.id } : m
-      )
+      const movieId = editingMovie._id || editingMovie.id
+      const updatedMovies = movies.map(m => {
+        const currentId = m._id || m.id
+        return currentId === movieId ? { ...formData, _id: m._id, id: m.id } : m
+      })
       setMovies(updatedMovies)
       localStorage.setItem('movies', JSON.stringify(updatedMovies))
     }
@@ -219,7 +221,7 @@ function Admin() {
     if (selectedMovies.length === movies.length) {
       setSelectedMovies([])
     } else {
-      setSelectedMovies(movies.map(m => m.id))
+      setSelectedMovies(movies.map(m => m._id || m.id))
     }
   }
 
@@ -578,15 +580,15 @@ function Admin() {
             <tbody>
               {movies.map(movie => (
                 <tr 
-                  key={movie.id}
-                  className={selectedMovies.includes(movie.id) ? 'selected-row' : ''}
+                  key={movie._id || movie.id}
+                  className={selectedMovies.includes(movie._id || movie.id) ? 'selected-row' : ''}
                 >
                   {selectMode && (
                     <td>
                       <input 
                         type="checkbox" 
-                        checked={selectedMovies.includes(movie.id)}
-                        onChange={() => toggleSelectMovie(movie.id)}
+                        checked={selectedMovies.includes(movie._id || movie.id)}
+                        onChange={() => toggleSelectMovie(movie._id || movie.id)}
                         className="checkbox-select"
                       />
                     </td>
@@ -604,7 +606,7 @@ function Admin() {
                       <button onClick={() => handleEdit(movie)} className="btn-edit">
                         Edit
                       </button>
-                      <button onClick={() => handleDelete(movie.id)} className="btn-delete">
+                      <button onClick={() => handleDelete(movie._id || movie.id)} className="btn-delete">
                         Delete
                       </button>
                     </td>
