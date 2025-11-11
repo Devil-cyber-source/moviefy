@@ -1091,11 +1091,11 @@ function Admin() {
             <div className="upload-info">
               <h3>ℹ️ Upload Information</h3>
               <ul>
-                <li>Videos are uploaded to your backend server at <code>http://localhost:5000</code></li>
+                <li>Videos are uploaded to your backend server</li>
                 <li>Files are stored in <code>backend/uploads/videos/</code></li>
                 <li>Maximum file size: 5GB</li>
                 <li>Supported formats: MP4, MKV, AVI, MOV, WebM</li>
-                <li>Make sure your backend server is running</li>
+                <li>⚠️ For many movies, use Cloudinary (see CLOUDINARY_SETUP.md)</li>
               </ul>
             </div>
           </div>
