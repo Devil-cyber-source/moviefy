@@ -24,7 +24,6 @@ function Admin() {
   const [uploading, setUploading] = useState(false)
   const [uploadMessage, setUploadMessage] = useState('')
   const [videoFile, setVideoFile] = useState(null)
-  const [uploadMode, setUploadMode] = useState('file') // 'url' or 'file'
   const [formData, setFormData] = useState({
     title: '',
     year: '',
@@ -128,70 +127,11 @@ function Admin() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    // If file upload mode and has video file
-    if (uploadMode === 'file' && videoFile && !editingMovie) {
-      setUploading(true)
-      setUploadMessage('')
-      setUploadProgress(0)
-
-      const uploadFormData = new FormData()
-      uploadFormData.append('video', videoFile)
-      uploadFormData.append('title', formData.title)
-      uploadFormData.append('description', formData.description)
-      uploadFormData.append('category', formData.category)
-      uploadFormData.append('year', formData.year)
-      uploadFormData.append('thumbnail', formData.poster)
-
-      try {
-        const token = localStorage.getItem('token')
-        const xhr = new XMLHttpRequest()
-
-        xhr.upload.addEventListener('progress', (e) => {
-          if (e.lengthComputable) {
-            const percent = Math.round((e.loaded / e.total) * 100)
-            setUploadProgress(percent)
-          }
-        })
-
-        xhr.addEventListener('load', () => {
-          if (xhr.status === 200) {
-            setUploadMessage('✅ Video uploaded successfully!')
-            loadMovies()
-            resetForm()
-          } else {
-            const error = JSON.parse(xhr.responseText)
-            setUploadMessage('❌ Upload failed: ' + error.error)
-          }
-          setUploading(false)
-        })
-
-        xhr.addEventListener('error', () => {
-          setUploadMessage('❌ Upload failed: Network error')
-          setUploading(false)
-        })
-
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-        xhr.open('POST', `${apiUrl}/api/upload/video`)
-        xhr.setRequestHeader('Authorization', `Bearer ${token}`)
-        xhr.send(uploadFormData)
-
-      } catch (error) {
-        setUploadMessage('❌ Error: ' + error.message)
-        setUploading(false)
-      }
-      return
-    }
-
-    // Regular URL mode
+    // Only handle editing existing movies
     if (editingMovie) {
       const updatedMovies = movies.map(m => 
         m.id === editingMovie.id ? { ...formData, id: editingMovie.id } : m
       )
-      setMovies(updatedMovies)
-      localStorage.setItem('movies', JSON.stringify(updatedMovies))
-    } else {
-      const newMovie = { ...formData, id: Date.now() }
-      const updatedMovies = [...movies, newMovie]
       setMovies(updatedMovies)
       localStorage.setItem('movies', JSON.stringify(updatedMovies))
     }
@@ -367,7 +307,6 @@ function Admin() {
     setEditingMovie(null)
     setShowAddForm(false)
     setVideoFile(null)
-    setUploadMode('url')
     setUploadMessage('')
     setUploadProgress(0)
   }
@@ -603,7 +542,6 @@ function Admin() {
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
                 required
-                disabled={uploading}
               />
               <input
                 type="number"
@@ -611,28 +549,22 @@ function Admin() {
                 value={formData.year}
                 onChange={(e) => setFormData({...formData, year: e.target.value})}
                 required
-                disabled={uploading}
               />
               <input
                 type="text"
                 placeholder="Duration (e.g., 2h 30m)"
                 value={formData.duration}
                 onChange={(e) => setFormData({...formData, duration: e.target.value})}
-                required={uploadMode === 'url'}
-                disabled={uploading}
               />
               <input
                 type="text"
                 placeholder="Rating (e.g., PG-13)"
                 value={formData.rating}
                 onChange={(e) => setFormData({...formData, rating: e.target.value})}
-                required={uploadMode === 'url'}
-                disabled={uploading}
               />
               <select
                 value={formData.category}
                 onChange={(e) => setFormData({...formData, category: e.target.value})}
-                disabled={uploading}
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
@@ -644,7 +576,6 @@ function Admin() {
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
               required
-              disabled={uploading}
             />
             <input
               type="url"
@@ -652,71 +583,20 @@ function Admin() {
               value={formData.poster}
               onChange={(e) => setFormData({...formData, poster: e.target.value})}
               required
-              disabled={uploading}
             />
             <input
               type="url"
               placeholder="Backdrop URL"
               value={formData.backdrop}
               onChange={(e) => setFormData({...formData, backdrop: e.target.value})}
-              required={uploadMode === 'url'}
-              disabled={uploading}
             />
 
-            {(uploadMode === 'url' || editingMovie) ? (
-              <input
-                type="url"
-                placeholder="Video URL (e.g., /uploads/videos/filename.mp4)"
-                value={formData.videoUrl || ''}
-                onChange={(e) => setFormData({...formData, videoUrl: e.target.value})}
-                required={uploadMode === 'url' && !editingMovie}
-                disabled={uploading}
-              />
-            ) : (
-              <div className="file-upload-area">
-                <label htmlFor="videoFile" className="file-upload-label">
-                  {videoFile ? (
-                    <>
-                      <span className="file-icon">📹</span>
-                      <span className="file-name">{videoFile.name}</span>
-                      <span className="file-size">({(videoFile.size / (1024 * 1024)).toFixed(2)} MB)</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="file-icon">📁</span>
-                      <span>Click to select video file</span>
-                      <small>Supported: MP4, MKV, AVI, MOV, WebM (Max 5GB)</small>
-                    </>
-                  )}
-                </label>
-                <input
-                  id="videoFile"
-                  type="file"
-                  accept="video/*"
-                  onChange={(e) => setVideoFile(e.target.files[0])}
-                  disabled={uploading}
-                  style={{ display: 'none' }}
-                  required={uploadMode === 'file'}
-                />
-              </div>
-            )}
-
-            {uploading && (
-              <div className="upload-progress">
-                <div className="progress-bar-container">
-                  <div className="progress-bar-fill" style={{ width: `${uploadProgress}%` }}>
-                    {uploadProgress}%
-                  </div>
-                </div>
-                <p className="progress-text">Uploading... Please wait</p>
-              </div>
-            )}
-
-            {uploadMessage && (
-              <div className={`upload-message ${uploadMessage.includes('✅') ? 'success' : 'error'}`}>
-                {uploadMessage}
-              </div>
-            )}
+            <input
+              type="url"
+              placeholder="Video URL (e.g., /uploads/videos/filename.mp4)"
+              value={formData.videoUrl || ''}
+              onChange={(e) => setFormData({...formData, videoUrl: e.target.value})}
+            />
 
             {editingMovie && (
               <MovieLanguageManager 
@@ -729,10 +609,10 @@ function Admin() {
             )}
 
             <div className="form-actions">
-              <button type="submit" className="btn-primary" disabled={uploading}>
-                {uploading ? 'Uploading...' : editingMovie ? 'Update Movie' : uploadMode === 'file' ? '📤 Upload Video' : 'Add Movie'}
+              <button type="submit" className="btn-primary">
+                Update Movie
               </button>
-              <button type="button" onClick={resetForm} className="btn-secondary" disabled={uploading}>
+              <button type="button" onClick={resetForm} className="btn-secondary">
                 Cancel
               </button>
             </div>
