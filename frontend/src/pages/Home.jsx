@@ -32,23 +32,6 @@ function Home() {
   const loadMovies = async () => {
     setLoading(true)
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-      
-      // Fetch hidden movie IDs from database
-      let hiddenIds = []
-      try {
-        const hiddenResponse = await fetch(`${apiUrl}/api/hidden-movies`)
-        if (hiddenResponse.ok) {
-          const hiddenData = await hiddenResponse.json()
-          hiddenIds = hiddenData.hiddenIds || []
-          console.log('✅ Loaded hidden movies:', hiddenIds.length, hiddenIds)
-        } else {
-          console.log('⚠️ Hidden movies API returned:', hiddenResponse.status)
-        }
-      } catch (err) {
-        console.log('⚠️ Could not load hidden movies:', err.message)
-      }
-      
       // Try to fetch movies from API
       const response = await fetch(API_ENDPOINTS.MOVIES)
       if (response.ok) {
@@ -67,20 +50,8 @@ function Home() {
           }
         })
         
-        // Filter out hidden movies
-        const filteredMovies = allMovies.filter(m => {
-          const movieId = String(m._id || m.id)
-          const isHidden = hiddenIds.includes(movieId)
-          if (isHidden) {
-            console.log('🚫 Filtering out hidden movie:', movieId, m.title)
-          }
-          return !isHidden
-        })
-        
-        console.log('📊 Total movies:', allMovies.length, '| Hidden:', hiddenIds.length, '| Showing:', filteredMovies.length)
-        
-        setMovies(filteredMovies)
-        localStorage.setItem('movies', JSON.stringify(filteredMovies))
+        setMovies(allMovies)
+        localStorage.setItem('movies', JSON.stringify(allMovies))
       } else {
         throw new Error('API not available')
       }

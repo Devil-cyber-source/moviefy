@@ -49,27 +49,11 @@ function Admin() {
   const loadMovies = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-      
-      // Fetch hidden movie IDs from database
-      let hiddenIds = []
-      try {
-        const hiddenResponse = await fetch(`${apiUrl}/api/hidden-movies`)
-        if (hiddenResponse.ok) {
-          const hiddenData = await hiddenResponse.json()
-          hiddenIds = hiddenData.hiddenIds || []
-          console.log('✅ Admin loaded hidden movies:', hiddenIds.length, hiddenIds)
-        } else {
-          console.log('⚠️ Hidden movies API returned:', hiddenResponse.status)
-        }
-      } catch (err) {
-        console.log('⚠️ Could not load hidden movies:', err.message)
-      }
-      
       const response = await fetch(`${apiUrl}/api/movies`)
       
       if (response.ok) {
         const apiMovies = await response.json()
-        console.log('✅ Admin loaded movies from API:', apiMovies.length)
+        console.log('✅ Loaded movies from API:', apiMovies.length)
         
         // Merge API movies with default movies
         const allMovies = [...defaultMovies]
@@ -82,25 +66,13 @@ function Admin() {
           }
         })
         
-        // Filter out hidden movies
-        const filteredMovies = allMovies.filter(m => {
-          const movieId = String(m._id || m.id)
-          const isHidden = hiddenIds.includes(movieId)
-          if (isHidden) {
-            console.log('🚫 Filtering out hidden movie:', movieId, m.title)
-          }
-          return !isHidden
-        })
-        
-        console.log('📊 Total movies:', allMovies.length, '| Hidden:', hiddenIds.length, '| Showing:', filteredMovies.length)
-        
-        setMovies(filteredMovies)
-        localStorage.setItem('movies', JSON.stringify(filteredMovies))
+        setMovies(allMovies)
+        localStorage.setItem('movies', JSON.stringify(allMovies))
       } else {
         throw new Error('API not available')
       }
     } catch (error) {
-      console.log('⚠️ Admin using default movies (API not available)')
+      console.log('⚠️ Using default movies (API not available)')
       setMovies(defaultMovies)
       localStorage.setItem('movies', JSON.stringify(defaultMovies))
     }
@@ -146,50 +118,39 @@ function Admin() {
   }
 
   const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this movie? This will hide it for all users.')) {
+    if (!confirm('⚠️ Are you sure you want to PERMANENTLY delete this movie?\n\nThis will:\n- Delete the movie from database\n- Remove the video file from server\n- Cannot be undone!')) {
       return
     }
 
-    console.log('🗑️ Attempting to delete movie ID:', id)
+    console.log('🗑️ Permanently deleting movie ID:', id)
 
     try {
       const token = localStorage.getItem('token')
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
       
-      console.log('📡 Calling API:', `${apiUrl}/api/hidden-movies/${id}`)
-      console.log('🔑 Token:', token ? 'Present' : 'Missing')
-      
-      // Hide movie in database (works for both static and database movies)
-      const response = await fetch(`${apiUrl}/api/hidden-movies/${id}`, {
-        method: 'POST',
+      // Delete movie from database permanently
+      const response = await fetch(`${apiUrl}/api/movies/${id}`, {
+        method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })
 
-      console.log('📥 Response status:', response.status)
       const responseData = await response.json()
-      console.log('📥 Response data:', responseData)
 
       if (response.ok) {
-        console.log('✅ Movie hidden in database for all users')
-        alert('✅ Movie deleted successfully! Refresh to see changes.')
+        console.log('✅ Movie permanently deleted from database')
+        alert('✅ Movie deleted permanently!')
+        loadMovies() // Reload movies list
       } else {
-        console.error('❌ API hide failed:', responseData)
+        console.error('❌ Delete failed:', responseData)
         alert(`⚠️ Failed to delete movie: ${responseData.error || 'Unknown error'}`)
-        return
       }
     } catch (error) {
-      console.error('❌ API error:', error)
+      console.error('❌ Delete error:', error)
       alert(`⚠️ Cannot connect to server: ${error.message}`)
-      return
     }
-
-    // Update local state
-    const updatedMovies = movies.filter(m => m.id !== id && m._id !== id)
-    setMovies(updatedMovies)
-    localStorage.setItem('movies', JSON.stringify(updatedMovies))
   }
 
   const handleBulkDelete = async () => {
@@ -198,7 +159,7 @@ function Admin() {
       return
     }
 
-    if (!confirm(`Are you sure you want to delete ${selectedMovies.length} movies? This will hide them for all users.`)) {
+    if (!confirm(`⚠️ PERMANENTLY delete ${selectedMovies.length} movies?\n\nThis will:\n- Delete movies from database\n- Remove video files from server\n- Cannot be undone!`)) {
       return
     }
 
@@ -208,31 +169,37 @@ function Admin() {
       const token = localStorage.getItem('token')
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
       
-      const response = await fetch(`${apiUrl}/api/hidden-movies/bulk/hide`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ movieIds: selectedMovies })
-      })
+      // Delete each movie individually
+      let successCount = 0
+      let failCount = 0
+      
+      for (const movieId of selectedMovies) {
+        try {
+          const response = await fetch(`${apiUrl}/api/movies/${movieId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          })
+          
+          if (response.ok) {
+            successCount++
+          } else {
+            failCount++
+          }
+        } catch (err) {
+          failCount++
+        }
+      }
 
-      const responseData = await response.json()
-      console.log('📥 Bulk delete response:', responseData)
-
-      if (response.ok) {
-        console.log('✅ Bulk delete successful')
-        alert(`✅ ${selectedMovies.length} movies deleted successfully! Refresh to see changes.`)
-        
-        // Update local state
-        const updatedMovies = movies.filter(m => !selectedMovies.includes(m.id) && !selectedMovies.includes(m._id))
-        setMovies(updatedMovies)
-        localStorage.setItem('movies', JSON.stringify(updatedMovies))
+      if (successCount > 0) {
+        alert(`✅ Successfully deleted ${successCount} movies!${failCount > 0 ? `\n⚠️ Failed to delete ${failCount} movies.` : ''}`)
+        loadMovies() // Reload movies list
         setSelectedMovies([])
         setSelectMode(false)
       } else {
-        console.error('❌ Bulk delete failed:', responseData)
-        alert(`⚠️ Failed to delete movies: ${responseData.error || 'Unknown error'}`)
+        alert(`❌ Failed to delete all movies`)
       }
     } catch (error) {
       console.error('❌ Bulk delete error:', error)
@@ -263,34 +230,7 @@ function Admin() {
     setSelectedMovies([])
   }
 
-  const handleUnhideAll = async () => {
-    if (!confirm('Unhide all movies? This will restore all deleted movies.')) {
-      return
-    }
 
-    try {
-      const token = localStorage.getItem('token')
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-      
-      const response = await fetch(`${apiUrl}/api/debug/hidden-movies/clear`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-
-      const data = await response.json()
-      
-      if (response.ok) {
-        alert(`✅ ${data.message}`)
-        loadMovies() // Reload movies
-      } else {
-        alert(`⚠️ Failed: ${data.error}`)
-      }
-    } catch (error) {
-      alert(`⚠️ Error: ${error.message}`)
-    }
-  }
 
   const resetForm = () => {
     setFormData({
@@ -499,13 +439,6 @@ function Admin() {
                       className="btn-secondary"
                     >
                       🗑️ Multi Delete
-                    </button>
-                    <button 
-                      onClick={handleUnhideAll} 
-                      className="btn-warning"
-                      style={{background: '#ff9800', marginLeft: '10px'}}
-                    >
-                      🔄 Unhide All
                     </button>
                   </>
                 ) : (
