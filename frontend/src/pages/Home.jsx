@@ -38,27 +38,21 @@ function Home() {
         const apiMovies = await response.json()
         console.log('✅ Loaded movies from API:', apiMovies.length)
         
-        // Merge API movies with default movies (avoid duplicates)
-        const allMovies = [...defaultMovies]
-        apiMovies.forEach(apiMovie => {
-          // Only add if not already in default movies
-          if (!allMovies.find(m => m.id === apiMovie.id || m._id === apiMovie._id)) {
-            allMovies.push({
-              ...apiMovie,
-              id: apiMovie._id || apiMovie.id
-            })
-          }
-        })
+        // Only use API movies (uploaded movies)
+        const moviesWithId = apiMovies.map(apiMovie => ({
+          ...apiMovie,
+          id: apiMovie._id || apiMovie.id
+        }))
         
-        setMovies(allMovies)
-        localStorage.setItem('movies', JSON.stringify(allMovies))
+        setMovies(moviesWithId)
+        localStorage.setItem('movies', JSON.stringify(moviesWithId))
       } else {
         throw new Error('API not available')
       }
     } catch (error) {
-      console.log('⚠️ Using default movies (API not available)')
-      setMovies(defaultMovies)
-      localStorage.setItem('movies', JSON.stringify(defaultMovies))
+      console.log('⚠️ API not available, showing empty list')
+      setMovies([])
+      localStorage.setItem('movies', JSON.stringify([]))
     } finally {
       setLoading(false)
     }

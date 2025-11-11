@@ -55,26 +55,21 @@ function Admin() {
         const apiMovies = await response.json()
         console.log('✅ Loaded movies from API:', apiMovies.length)
         
-        // Merge API movies with default movies
-        const allMovies = [...defaultMovies]
-        apiMovies.forEach(apiMovie => {
-          if (!allMovies.find(m => m.id === apiMovie.id || m._id === apiMovie._id)) {
-            allMovies.push({
-              ...apiMovie,
-              id: apiMovie._id || apiMovie.id
-            })
-          }
-        })
+        // Only use API movies (uploaded movies)
+        const moviesWithId = apiMovies.map(apiMovie => ({
+          ...apiMovie,
+          id: apiMovie._id || apiMovie.id
+        }))
         
-        setMovies(allMovies)
-        localStorage.setItem('movies', JSON.stringify(allMovies))
+        setMovies(moviesWithId)
+        localStorage.setItem('movies', JSON.stringify(moviesWithId))
       } else {
         throw new Error('API not available')
       }
     } catch (error) {
-      console.log('⚠️ Using default movies (API not available)')
-      setMovies(defaultMovies)
-      localStorage.setItem('movies', JSON.stringify(defaultMovies))
+      console.log('⚠️ API not available, showing empty list')
+      setMovies([])
+      localStorage.setItem('movies', JSON.stringify([]))
     }
   }
 
@@ -171,28 +166,14 @@ function Admin() {
       const token = localStorage.getItem('token')
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
       
-      // Separate database movies from static movies
-      const dbMovies = movies.filter(m => {
-        const id = m._id || m.id
-        return selectedMovies.includes(id) && m._id // Only database movies have _id
-      })
-      
-      const staticMovies = movies.filter(m => {
-        const id = m._id || m.id
-        return selectedMovies.includes(id) && !m._id // Static movies don't have _id
-      })
-      
-      console.log('📊 DB movies to delete:', dbMovies.length)
-      console.log('📊 Static movies to remove:', staticMovies.length)
-      
-      // Delete database movies
+      // Delete all selected movies from database
       let successCount = 0
       let failCount = 0
       
-      for (const movie of dbMovies) {
+      for (const movieId of selectedMovies) {
         try {
-          console.log('🗑️ Deleting movie:', movie._id, movie.title)
-          const response = await fetch(`${apiUrl}/api/movies/${movie._id}`, {
+          console.log('🗑️ Deleting movie:', movieId)
+          const response = await fetch(`${apiUrl}/api/movies/${movieId}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -201,28 +182,17 @@ function Admin() {
           })
           
           if (response.ok) {
-            console.log('✅ Deleted:', movie.title)
+            console.log('✅ Deleted movie:', movieId)
             successCount++
           } else {
             const error = await response.json()
-            console.error('❌ Failed to delete:', movie.title, error)
+            console.error('❌ Failed to delete:', movieId, error)
             failCount++
           }
         } catch (err) {
-          console.error('❌ Error deleting:', movie.title, err)
+          console.error('❌ Error deleting:', movieId, err)
           failCount++
         }
-      }
-
-      // Remove static movies from local state only
-      if (staticMovies.length > 0) {
-        const updatedMovies = movies.filter(m => {
-          const id = m._id || m.id
-          return !selectedMovies.includes(id) || m._id // Keep DB movies (will reload), remove static
-        })
-        setMovies(updatedMovies)
-        localStorage.setItem('movies', JSON.stringify(updatedMovies))
-        successCount += staticMovies.length
       }
 
       if (successCount > 0) {
