@@ -439,11 +439,18 @@ function Admin() {
             <div className="quick-actions">
               <h3>Quick Actions</h3>
               <div className="action-buttons">
+                <button onClick={() => setActiveTab('upload')} className="action-btn">
+                  <span>📤</span>
+                  <div>
+                    <strong>Upload Movie</strong>
+                    <p>Add new content</p>
+                  </div>
+                </button>
                 <button onClick={() => setActiveTab('movies')} className="action-btn">
                   <span>🎬</span>
                   <div>
-                    <strong>Add Movie</strong>
-                    <p>Upload new content</p>
+                    <strong>Manage Movies</strong>
+                    <p>Edit & delete</p>
                   </div>
                 </button>
                 <button onClick={() => setActiveTab('users')} className="action-btn">
@@ -458,13 +465,6 @@ function Admin() {
                   <div>
                     <strong>Analytics</strong>
                     <p>View insights</p>
-                  </div>
-                </button>
-                <button onClick={() => setActiveTab('categories')} className="action-btn">
-                  <span>📁</span>
-                  <div>
-                    <strong>Categories</strong>
-                    <p>Organize content</p>
                   </div>
                 </button>
               </div>

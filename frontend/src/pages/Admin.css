@@ -449,42 +449,53 @@
 
 .action-buttons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
 .action-btn {
-  background: #2a2a2a;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
   border: 2px solid #333;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 25px 20px;
+  border-radius: 12px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 15px;
+  justify-content: center;
+  gap: 12px;
   cursor: pointer;
-  transition: all 0.3s;
-  text-align: left;
+  transition: all 0.3s ease;
+  text-align: center;
+  min-height: 140px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .action-btn:hover {
+  background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
   border-color: #e50914;
-  transform: translateY(-2px);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(229, 9, 20, 0.3);
 }
 
 .action-btn span {
-  font-size: 32px;
+  font-size: 48px;
+  display: block;
+  margin-bottom: 5px;
 }
 
 .action-btn strong {
   display: block;
   margin-bottom: 5px;
   font-size: 16px;
+  font-weight: 700;
+  color: #fff;
 }
 
 .action-btn p {
-  font-size: 12px;
+  font-size: 13px;
   color: #b3b3b3;
   margin: 0;
+  line-height: 1.4;
 }
 
 .recent-activity {
@@ -775,7 +786,8 @@
   }
 
   .action-buttons {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
   }
 
   .section-header {
@@ -922,11 +934,20 @@
   }
 
   .action-btn {
-    padding: 15px;
+    padding: 20px 15px;
+    min-height: 120px;
   }
 
   .action-btn span {
-    font-size: 24px;
+    font-size: 36px;
+  }
+  
+  .action-btn strong {
+    font-size: 14px;
+  }
+  
+  .action-btn p {
+    font-size: 12px;
   }
 
   .plan-stat {
@@ -956,6 +977,27 @@
   }
 }
 
+/* Small Mobile - Single Column */
+@media (max-width: 480px) {
+  .action-buttons {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .action-btn {
+    min-height: 100px;
+    padding: 18px 15px;
+  }
+  
+  .action-btn span {
+    font-size: 32px;
+  }
+  
+  .action-btn strong {
+    font-size: 15px;
+  }
+}
+
 /* Tablet Optimization */
 @media (min-width: 769px) and (max-width: 1024px) {
   .admin-stats {
@@ -972,6 +1014,11 @@
 
   .action-buttons {
     grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .action-btn {
+    min-height: 130px;
   }
 }
 
