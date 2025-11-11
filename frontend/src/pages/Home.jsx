@@ -9,6 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import { useAuth } from '../context/AuthContext'
 import { movies as defaultMovies } from '../data/movies'
 import { API_ENDPOINTS } from '../config/api'
+import { cleanupWatchHistory } from '../utils/cleanupStorage'
 import '../App.css'
 
 function Home() {
@@ -46,6 +47,9 @@ function Home() {
         
         setMovies(moviesWithId)
         localStorage.setItem('movies', JSON.stringify(moviesWithId))
+        
+        // Clean up watch history for deleted movies
+        cleanupWatchHistory()
       } else {
         throw new Error('API not available')
       }
