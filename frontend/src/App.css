@@ -1,0 +1,12 @@
+/* Import Broflix Modern Design */
+@import './styles/Broflix.css';
+
+/* Base App Styles */
+.app {
+  min-height: 100vh;
+  background: #141414;
+}
+
+.content {
+  padding-top: 80px;
+}

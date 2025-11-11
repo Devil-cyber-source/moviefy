@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import './Navbar.css'
@@ -7,8 +7,18 @@ function Navbar({ onSearch, onCategoryChange }) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
+
+  // Add scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const handleNavClick = (category) => {
     onCategoryChange(category)
@@ -27,15 +37,15 @@ function Navbar({ onSearch, onCategoryChange }) {
   }
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-left">
         {currentUser?.role !== 'admin' && (
           <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             ☰
           </button>
         )}
-        <h1 className="logo" onClick={() => currentUser?.role === 'admin' ? navigate('/admin') : handleNavClick('all')}>
-          MOVIEFY
+        <h1 className="navbar-brand" onClick={() => currentUser?.role === 'admin' ? navigate('/admin') : handleNavClick('all')}>
+          BROFLIX
         </h1>
         {currentUser?.role !== 'admin' && (
           <ul className="nav-links">
