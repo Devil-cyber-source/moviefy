@@ -45,7 +45,7 @@ function Navbar({ onSearch, onCategoryChange }) {
           </button>
         )}
         <h1 className="navbar-brand" onClick={() => currentUser?.role === 'admin' ? navigate('/admin') : handleNavClick('all')}>
-          BROFLIX
+          MOVIEFY
         </h1>
         {currentUser?.role !== 'admin' && (
           <ul className="nav-links">
